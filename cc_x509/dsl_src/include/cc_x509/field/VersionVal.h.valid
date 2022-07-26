@@ -1,0 +1,6 @@
+/// @brief Custom validity check
+/// @details Treating "v1" as invalid to skip default value serialization
+bool valid() const
+{
+    return Base::valid() && (Base::value() != Base::ValueType::v1);
+}

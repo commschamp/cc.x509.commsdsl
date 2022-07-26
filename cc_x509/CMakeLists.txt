@@ -1,0 +1,78 @@
+find_file(asn1_schema "schema.xml" PATH_SUFFIXES cc_asn1/dsl share/cc_asn1/dsl usr/share/cc_asn1/dsl)
+
+if (NOT asn1_schema)
+    message (FATAL_ERROR "The required ASN.1 definition schema is not found.")
+endif ()
+
+get_filename_component(asn1_dir ${asn1_schema} DIRECTORY)
+set (asn1_dsl_src ${asn1_dir}/../dsl_src)
+
+if (NOT EXISTS ${asn1_dsl_src})
+    message (FATAL_ERROR "The extra source files of the ASN.1 definition schema haven't been found in expected location \"${asn1_dsl_src}\".")
+endif ()
+
+find_program(COMMSDSL2COMMS_EXE "commsdsl2comms" PATH_SUFFIXES bin REQUIRED)
+
+set (name ${PROJECT_NAME})
+set (output_dir ${CMAKE_CURRENT_BINARY_DIR}/output)
+set (tmp_output_dir ${output_dir}.tmp)
+file (GLOB x509_schema_files ${CMAKE_CURRENT_SOURCE_DIR}/dsl/*.xml)
+set (schema_files ${asn1_schema} ${x509_schema_files})
+
+if (NOT "${CC_X509_DEF_OUTPUT_DIR}" STREQUAL "")
+    set (output_dir ${CC_X509_DEF_OUTPUT_DIR})
+endif ()
+set (x509_code_input_dir ${CMAKE_CURRENT_SOURCE_DIR}/dsl_src)
+set (code_input_param)
+if (EXISTS "${x509_code_input_dir}/")
+    set (combined_code_input_dir ${CMAKE_CURRENT_BINARY_DIR}/${name}_dsl_src)
+    execute_process (
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${combined_code_input_dir})
+
+    execute_process (
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${asn1_dsl_src}/ ${x509_code_input_dir}/ ${combined_code_input_dir}/)
+                
+    set (code_input_param -c ${combined_code_input_dir})
+else ()
+    set (code_input_param -c ${asn1_dsl_src})
+endif()
+
+set (rm_tmp_tgt ${name}_rm_tmp_tgt)
+add_custom_target(${rm_tmp_tgt}
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${tmp_output_dir}
+)
+
+add_custom_command(
+    OUTPUT ${tmp_output_dir}
+    DEPENDS ${schema_files} ${rm_tmp_tgt}
+    COMMAND ${COMMSDSL2COMMS_EXE} -d -s --warn-as-err -o ${tmp_output_dir} ${code_input_param} ${schema_files}
+)
+
+set (output_tgt ${name}_output_tgt)
+add_custom_target(${output_tgt} ALL
+    COMMAND ${CMAKE_COMMAND}
+        -DGENERATED="${tmp_output_dir}" -DOUTPUT="${output_dir}" -DCLEANUP_DIRS="doc;include" 
+        -P "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake"
+    DEPENDS ${tmp_output_dir} "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake" ${schema_files})
+
+set (build_tgt ${X509_BUILD_TGT})
+set (build_dir ${CMAKE_CURRENT_BINARY_DIR}/build)
+set (install_dir ${CMAKE_INSTALL_PREFIX})
+
+execute_process (
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${build_dir}")
+
+add_custom_target(${build_tgt} ALL
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${build_dir}"
+    COMMAND 
+        ${CMAKE_COMMAND} 
+            ${output_dir}
+            -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+            -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE} -DCMAKE_GENERATOR=${CMAKE_GENERATOR}
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} 
+            -DCMAKE_INSTALL_PREFIX=${install_dir}
+            -DOPT_REQUIRE_COMMS_LIB=OFF
+    COMMAND
+        ${CMAKE_COMMAND} --build ${build_dir} --config ${CMAKE_BUILD_TYPE} --target install
+    WORKING_DIRECTORY ${build_dir}
+    DEPENDS ${output_tgt})    

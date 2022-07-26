@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="cc_x509" endian="big">
+    <fields>
+        <string name="MsgName" defaultValue="Message" />
+            
+        <enum name="MsgId" type="uint8" semanticType="messageId">
+            <validValue name="M0" val="0" displayName="^MsgName" />
+        </enum> 
+
+        <enum name="VersionVal" type="uint64" availableLengthLimit="true" validOverride="extend">
+            <validValue name="v1" val="0" />
+            <validValue name="v2" val="1" />
+            <validValue name="v3" val="2" />
+        </enum>        
+
+        <optional name="Version" missingOnReadFail="true" missingOnInvalid="true" defaultMode="missing">
+            <bundle name="ActVersion" reuse="@cc_asn1.der.ExplicitContext0">
+                <replace>
+                    <bundle name="Value" reuse="@cc_asn1.der.Integer">
+                        <replace>
+                            <ref name="Value" field="VersionVal" />
+                        </replace>
+                    </bundle>
+                </replace>
+            </bundle>
+        </optional>
+
+        <bundle name="AlgorithmIdentifier" reuse="@cc_asn1.der.Sequence">
+            <replace>
+                <bundle name="Value">
+                    <ref name="algorithm" field="@cc_asn1.der.ObjectIdentifier" />
+                    <data name="parameters">
+                        <description>
+                            Parse the raw data of the parameters independently based on the value of the algorithm
+                        </description>
+                    </data>
+                </bundle>
+            </replace>
+        </bundle>    
+
+        <variant name="Time">
+            <ref name="utcTime" field="@cc_asn1.der.UtcTime" />
+            <ref name="generalTime" field="@cc_asn1.der.GeneralizedTime" />        
+        </variant>                
+
+        <variant name="Validity">
+            <ref name="notBefore" field="Time" />
+            <ref name="notAfter" field="Time" />
+        </variant>         
+
+        <bundle name="SubjectPublicKeyInfo" reuse="@cc_asn1.der.Sequence">
+            <replace>
+                <bundle name="Value">
+                    <ref name="algorithm" field="AlgorithmIdentifier" />
+                    <ref name="subjectPublicKey" field="@cc_asn1.der.RawBitString" />
+                </bundle>
+            </replace>
+        </bundle>   
+
+        <bundle name="Extension" reuse="@cc_asn1.der.Sequence">
+            <replace>
+                <bundle name="Value">
+                    <ref name="extnID" field="@cc_asn1.der.ObjectIdentifier" />
+                    <ref name="critical" field="@cc_asn1.der.BooleanDefaultFalse" />
+                    <ref name="extnValue" field="@cc_asn1.der.OctetString" />
+                </bundle>
+            </replace>
+        </bundle>
+
+        <bundle name="AttributeTypeAndValue" reuse="@cc_asn1.der.Sequence">
+            <replace>
+                <bundle name="Value">
+                    <ref name="type" field="@cc_asn1.der.ObjectIdentifier" />
+                    <data name="value">
+                        <description>
+                            Parse the raw data of the parameters independently based on the value of the type
+                        </description>                    
+                    </data>
+                </bundle>
+            </replace>
+        </bundle>
+
+        <bundle name="RelativeDistinguishedName" reuse="@cc_asn1.der.Set">
+            <replace>
+                <list name="Value" element="AttributeTypeAndValue" />
+            </replace>
+        </bundle>
+
+        <bundle name="RDNSequence" reuse="@cc_asn1.der.SequenceOf">
+            <replace>
+                <list name="Value" element="RelativeDistinguishedName" />
+            </replace>
+        </bundle>
+
+        <variant name="Name">
+            <ref name="rdnSequence" field="RDNSequence" />
+        </variant>
+
+        <bundle name="TBSCertificate" reuse="@cc_asn1.der.Sequence">
+            <replace>
+                <bundle name="Value">
+                    <ref name="version" field="Version" />
+                    <ref name="serialNumber" field="@cc_asn1.der.RawInteger" />
+                    <ref name="signature" field="AlgorithmIdentifier" />
+                    <ref name="issuer" field="Name" />
+                    <ref name="validity" field="Validity" />
+                    <ref name="subject" field="Name" />
+                    <ref name="subjectPublicKeyInfo" field="SubjectPublicKeyInfo" />
+                    <optional name="issuerUniqueID" missingOnReadFail="true">
+                        <bundle name="actIssuerUniqueID" reuse="@cc_asn1.der.RawBitString">
+                            <replace>
+                                <int name="Tag" reuse="@cc_asn1.TagByte" defaultValidValue="@cc_asn1.Tag.Context1" />
+                            </replace>
+                        </bundle>
+                    </optional> 
+                    <optional name="subjectUniqueID" missingOnReadFail="true">
+                        <bundle name="actSubjectUniqueID" reuse="@cc_asn1.der.RawBitString">
+                            <replace>
+                                <int name="Tag" reuse="@cc_asn1.TagByte" defaultValidValue="@cc_asn1.Tag.Context2" />
+                            </replace>
+                        </bundle>
+                    </optional>    
+                    <optional name="extensions" missingOnReadFail="true">
+                        <bundle name="actExtensions" reuse="@cc_asn1.der.ExplicitContext3">
+                            <replace>
+                                <bundle name="Value" reuse="@cc_asn1.der.SequenceOf">
+                                    <replace>
+                                        <list name="Value" element="Extension" />
+                                    </replace>
+                                </bundle>
+                            </replace>
+                        </bundle>
+                    </optional>                                        
+                </bundle>
+            </replace>
+        </bundle>
+
+        <bundle name="Certificate">
+            <ref name="tbsCertificate" field="TBSCertificate" />
+            <ref name="signatureAlgorithm" field="AlgorithmIdentifier" />
+            <ref name="signatureValue" field="@cc_asn1.der.RawBitString" />
+        </bundle> 
+    </fields>
+
+    <frame name="Frame">
+        <id name="Id">
+            <int name="IdField" type="uint8" defaultValue="MsgId.M0" pseudo="true" />
+        </id>
+        <payload name="Data" />
+    </frame>
+    
+    <message name="Msg" id="MsgId.M0" displayName="^MsgName">
+        <ref field="Certificate" />
+    </message>    
+</schema>
