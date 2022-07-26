@@ -13,7 +13,7 @@
             <validValue name="v3" val="2" />
         </enum>        
 
-        <optional name="Version" missingOnReadFail="true" missingOnInvalid="true" defaultMode="missing">
+        <optional name="Version" missingOnReadFail="true" missingOnInvalid="true" defaultMode="tentative">
             <bundle name="ActVersion" reuse="@cc_asn1.der.ExplicitContext0">
                 <replace>
                     <bundle name="Value" reuse="@cc_asn1.der.Integer">
@@ -43,10 +43,14 @@
             <ref name="generalTime" field="@cc_asn1.der.GeneralizedTime" />        
         </variant>                
 
-        <variant name="Validity">
-            <ref name="notBefore" field="Time" />
-            <ref name="notAfter" field="Time" />
-        </variant>         
+        <bundle name="Validity" reuse="@cc_asn1.der.Sequence">
+            <replace>
+                <bundle name="Value">
+                    <ref name="notBefore" field="Time" />
+                    <ref name="notAfter" field="Time" />
+                </bundle>
+            </replace>
+        </bundle>         
 
         <bundle name="SubjectPublicKeyInfo" reuse="@cc_asn1.der.Sequence">
             <replace>
@@ -130,15 +134,19 @@
                                 </bundle>
                             </replace>
                         </bundle>
-                    </optional>                                        
+                    </optional>
                 </bundle>
             </replace>
         </bundle>
 
-        <bundle name="Certificate">
-            <ref name="tbsCertificate" field="TBSCertificate" />
-            <ref name="signatureAlgorithm" field="AlgorithmIdentifier" />
-            <ref name="signatureValue" field="@cc_asn1.der.RawBitString" />
+        <bundle name="Certificate" reuse="@cc_asn1.der.Sequence">
+            <replace>
+                <bundle name="Value">
+                    <ref name="tbsCertificate" field="TBSCertificate" />
+                    <ref name="signatureAlgorithm" field="AlgorithmIdentifier" />
+                    <ref name="signatureValue" field="@cc_asn1.der.RawBitString" />
+                </bundle>
+            </replace>
         </bundle> 
     </fields>
 

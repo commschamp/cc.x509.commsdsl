@@ -49,4 +49,18 @@ CC_X509_msvc_force_warn_opt("/W4")
 
 set (X509_BUILD_TGT "${PROJECT_NAME}_build_tgt")
 
+find_file(CC_X509_ASN1_SCHEMA "schema.xml" PATH_SUFFIXES cc_asn1/dsl share/cc_asn1/dsl usr/share/cc_asn1/dsl)
+
+if (NOT CC_X509_ASN1_SCHEMA)
+    message (FATAL_ERROR "The required ASN.1 definition schema is not found.")
+endif ()
+
+get_filename_component(asn1_dir ${CC_X509_ASN1_SCHEMA} DIRECTORY)
+set (CC_X509_ASN1_DSL_SRC ${asn1_dir}/../dsl_src)
+
+if (NOT EXISTS ${CC_X509_ASN1_DSL_SRC})
+    message (FATAL_ERROR "The extra source files of the ASN.1 definition schema haven't been found in expected location \"${CC_X509_ASN1_DSL_SRC}\".")
+endif ()
+
 add_subdirectory (cc_x509)
+add_subdirectory (app)
