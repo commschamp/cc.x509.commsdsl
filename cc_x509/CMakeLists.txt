@@ -3,8 +3,12 @@ find_program(COMMSDSL2COMMS_EXE "commsdsl2comms" PATH_SUFFIXES bin REQUIRED)
 set (name ${PROJECT_NAME})
 set (output_dir ${CMAKE_CURRENT_BINARY_DIR}/output)
 set (tmp_output_dir ${output_dir}.tmp)
-file (GLOB x509_schema_files ${CMAKE_CURRENT_SOURCE_DIR}/dsl/*.xml)
-set (schema_files ${CC_X509_ASN1_SCHEMA} ${x509_schema_files})
+set (schema_files 
+    ${CC_X509_ASN1_SCHEMA} 
+    ${CMAKE_CURRENT_SOURCE_DIR}/dsl/main_schema.xml
+    ${CC_X509_ASN1_EMB_SCHEMA} 
+    ${CMAKE_CURRENT_SOURCE_DIR}/dsl/fields_schema.xml)
+
 
 if (NOT "${CC_X509_DEF_OUTPUT_DIR}" STREQUAL "")
     set (output_dir ${CC_X509_DEF_OUTPUT_DIR})
@@ -32,7 +36,7 @@ add_custom_target(${rm_tmp_tgt}
 add_custom_command(
     OUTPUT ${tmp_output_dir}
     DEPENDS ${schema_files} ${rm_tmp_tgt}
-    COMMAND ${COMMSDSL2COMMS_EXE} -d -s --warn-as-err -o ${tmp_output_dir} ${code_input_param} ${schema_files}
+    COMMAND ${COMMSDSL2COMMS_EXE} -d -s --warn-as-err -o ${tmp_output_dir} ${code_input_param} ${CC_X509_COMMSDSL2COMMS_EXTRA_ARGS} ${schema_files}
 )
 
 set (output_tgt ${name}_output_tgt)

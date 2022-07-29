@@ -1,10 +1,13 @@
 find_program(COMMSDSL2TEST_EXE "commsdsl2test" PATH_SUFFIXES bin REQUIRED)
 
-set (name "cc_x509_dump")
+set (name "cc_x509_input_test")
 set (output_dir ${CMAKE_CURRENT_BINARY_DIR}/output)
 set (tmp_output_dir ${output_dir}.tmp)
-file (GLOB x509_schema_files ${PROJECT_SOURCE_DIR}/cc_x509/dsl/*.xml)
-set (schema_files ${CC_X509_ASN1_SCHEMA} ${x509_schema_files})
+set (schema_files 
+    ${CC_X509_ASN1_SCHEMA} 
+    ${PROJECT_SOURCE_DIR}/cc_x509/dsl/main_schema.xml
+    ${CC_X509_ASN1_EMB_SCHEMA} 
+    ${PROJECT_SOURCE_DIR}/cc_x509/dsl/fields_schema.xml)
 
 set (code_input_dir "${CMAKE_CURRENT_SOURCE_DIR}/src")
 set (code_input_param)
@@ -20,7 +23,7 @@ add_custom_target(${rm_tmp_tgt}
 add_custom_command(
     OUTPUT ${tmp_output_dir}
     DEPENDS ${schema_files} ${rm_tmp_tgt}
-    COMMAND ${COMMSDSL2TEST_EXE} -d -s --warn-as-err -o ${tmp_output_dir} ${code_input_param} ${schema_files}
+    COMMAND ${COMMSDSL2TEST_EXE} -s --warn-as-err -o ${tmp_output_dir} ${code_input_param} ${CC_X509_COMMSDSL2TEST_EXTRA_ARGS} ${schema_files}
 )
 
 set (output_tgt ${name}_output_tgt)
@@ -50,8 +53,6 @@ add_custom_target(${build_tgt} ALL
             -DCMAKE_CXX_STANDARD=${COMMSDSL_TESTS_CXX_STANDARD}
             -DCMAKE_INSTALL_PREFIX=${install_dir}
             -DCMAKE_PREFIX_PATH="\"${CMAKE_PREFIX_PATH}\""
-            -DOPT_TEST_RENAME=${name}
-            -DOPT_TEST_OPTIONS=X509DefaultOptions
     COMMAND
         ${CMAKE_COMMAND} --build ${build_dir} --config ${CMAKE_BUILD_TYPE} --target install
     WORKING_DIRECTORY ${build_dir}

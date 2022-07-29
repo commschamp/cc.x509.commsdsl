@@ -10,7 +10,8 @@ option (CC_X509_BUILD_DOC "Build documentation target in generated X.509 definit
 # Additional variables to be used if needed
 # ---------------------------
 # CC_X509_DEF_OUTPUT_DIR - Output directory for X.509 definition project. Defaults to implementation defined path inside ${PROJECT_BINARY_DIR}
-# CC_X509_EXTERNALS_DIR - Directory to contain sources for external projects, defaults to ${PROJECT_SOURCE_DIR}/externals.
+# CC_X509_COMMSDSL2COMMS_EXTRA_ARGS - Extra command line parameters to be passed to commsdsl2comms
+# CC_X509_COMMSDSL2TEST_EXTRA_ARGS - Extra command line parameters to be passed to commsdsl2test
 
 # Other built-in CMake variables that can be used
 # ---------------------------
@@ -19,10 +20,6 @@ option (CC_X509_BUILD_DOC "Build documentation target in generated X.509 definit
 # CMAKE_PROGRAM_PATH - Path(s) to find programs like commsdsl2comms to parse the schema files(s)
 
 ################################################
-
-if (NOT CC_X509_EXTERNALS_DIR)
-    set (CC_X509_EXTERNALS_DIR "${PROJECT_SOURCE_DIR}/externals")
-endif ()
 
 if (NOT CC_X509_DEF_OUTPUT_DIR)
     set (CC_X509_DEF_OUTPUT_DIR "${PROJECT_BINARY_DIR}/output")
@@ -50,8 +47,9 @@ CC_X509_msvc_force_warn_opt("/W4")
 set (X509_BUILD_TGT "${PROJECT_NAME}_build_tgt")
 
 find_file(CC_X509_ASN1_SCHEMA "schema.xml" PATH_SUFFIXES cc_asn1/dsl share/cc_asn1/dsl usr/share/cc_asn1/dsl)
+find_file(CC_X509_ASN1_EMB_SCHEMA "emb_schema.xml" PATH_SUFFIXES cc_asn1/dsl share/cc_asn1/dsl usr/share/cc_asn1/dsl)
 
-if (NOT CC_X509_ASN1_SCHEMA)
+if ((NOT CC_X509_ASN1_SCHEMA) OR (NOT CC_X509_ASN1_EMB_SCHEMA))
     message (FATAL_ERROR "The required ASN.1 definition schema is not found.")
 endif ()
 
