@@ -67,3 +67,12 @@ add_custom_target(${build_tgt} ALL
         ${CMAKE_COMMAND} --build ${build_dir} --config ${CMAKE_BUILD_TYPE} --target install
     WORKING_DIRECTORY ${build_dir}
     DEPENDS ${output_tgt})    
+
+if (CC_X509_BUILD_DOC)
+    find_package (Doxygen REQUIRED)
+
+    add_custom_target(doc_${name} ALL
+        COMMAND ${CMAKE_COMMAND} --build ${build_dir} --target doc_${name}
+        DEPENDS ${build_tgt} 
+    )
+endif ()    
