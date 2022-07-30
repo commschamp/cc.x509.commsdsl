@@ -209,7 +209,7 @@ jobs:
     - name: Configure CMake
       shell: bash
       working-directory: ${{runner.workspace}}/build
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install -DCMAKE_PREFIX_PATH=${{runner.workspace}}/externals/comms/build/install\;${{runner.workspace}}/externals/commsdsl/build/install;${{runner.workspace}}/externals/cc.asn1/build/install -DCC_X509_BUILD_APPS=ON -DCMAKE_CXX_STANDARD=${{matrix.cpp}}
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install -DCMAKE_PREFIX_PATH=${{runner.workspace}}/externals/comms/build/install\;${{runner.workspace}}/externals/commsdsl/build/install;\${{runner.workspace}}/externals/cc.asn1/build/install -DCC_X509_BUILD_APPS=ON -DCMAKE_CXX_STANDARD=${{matrix.cpp}}
       env:
         CC: gcc-${{matrix.cc_ver}}
         CXX: g++-${{matrix.cc_ver}}
@@ -318,7 +318,7 @@ jobs:
     - name: Configure CMake
       shell: bash
       working-directory: ${{runner.workspace}}/build
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install -DCMAKE_PREFIX_PATH=${{runner.workspace}}/externals/comms/build/install\;${{runner.workspace}}/externals/commsdsl/build/install;${{runner.workspace}}/externals/cc.asn1/build/install -DCC_X509_BUILD_APPS=ON -DCMAKE_CXX_STANDARD=${{matrix.cpp}}
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install -DCMAKE_PREFIX_PATH=${{runner.workspace}}/externals/comms/build/install\;${{runner.workspace}}/externals/commsdsl/build/install\;${{runner.workspace}}/externals/cc.asn1/build/install -DCC_X509_BUILD_APPS=ON -DCMAKE_CXX_STANDARD=${{matrix.cpp}}
       env:
         CC: clang-${{matrix.cc_ver}}
         CXX: clang++-${{matrix.cc_ver}}
@@ -427,7 +427,7 @@ jobs:
     - name: Configure CMake
       shell: bash
       working-directory: ${{runner.workspace}}/build
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install -DCMAKE_PREFIX_PATH=${{runner.workspace}}/externals/comms/build/install\;${{runner.workspace}}/externals/commsdsl/build/install;${{runner.workspace}}/externals/cc.asn1/build/install -DCC_X509_BUILD_APPS=ON -DCMAKE_CXX_STANDARD=${{matrix.cpp}}
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install -DCMAKE_PREFIX_PATH=${{runner.workspace}}/externals/comms/build/install\;${{runner.workspace}}/externals/commsdsl/build/install\;${{runner.workspace}}/externals/cc.asn1/build/install -DCC_X509_BUILD_APPS=ON -DCMAKE_CXX_STANDARD=${{matrix.cpp}}
       env:
         CC: clang-${{matrix.cc_ver}}
         CXX: clang++-${{matrix.cc_ver}}
