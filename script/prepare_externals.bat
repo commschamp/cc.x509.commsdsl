@@ -29,7 +29,7 @@ if [%COMMSDSL_REPO%] == [] set COMMSDSL_REPO="https://github.com/commschamp/comm
 
 if [%COMMSDSL_TAG%] == [] set COMMSDSL_TAG="master"
 
-if [%CC_ASN1_COMMSDSL_REPO%] == [] set CC_ASN1_COMMSDSL_REPO="https://github.com/commschamp/commsdsl.git"
+if [%CC_ASN1_COMMSDSL_REPO%] == [] set CC_ASN1_COMMSDSL_REPO="https://github.com/commschamp/cc.asn1.commsdsl.git"
 
 if [%CC_ASN1_COMMSDSL_TAG%] == [] set CC_ASN1_COMMSDSL_TAG="master"
 
