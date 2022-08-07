@@ -50,8 +50,8 @@ install:
 build_script:
     - echo ------------------------- Building Project -------------------------
     - cd %BUILD_DIR%
-    - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX="%COMMON_INSTALL_DIR%" -DCMAKE_PREFIX_PATH="%COMMON_INSTALL_DIR%" -DCMAKE_CXX_STANDARD=%CPP_STD% -DCC_X509_BUILD_APPS=ON
-    - cmake --build . --target install
+    - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX="%COMMON_INSTALL_DIR%" -DCMAKE_PREFIX_PATH="%COMMON_INSTALL_DIR%" -DCMAKE_CXX_STANDARD=%CPP_STD% -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DCC_X509_BUILD_APPS=ON
+    - cmake --build . --config %%CONFIGURATION%%
 
 
 
