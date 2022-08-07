@@ -142,9 +142,9 @@ function build_cc_asn1_commsdsl() {
     fi
 
     echo "Building cc.asn1.commsdsl ..."
-    mkdir -p ${COMMS_BUILD_DIR}
-    cmake -S ${COMMS_SRC_DIR} -B ${COMMS_BUILD_DIR} -DCMAKE_INSTALL_PREFIX=${COMMS_INSTALL_DIR} -DCMAKE_BUILD_TYPE=${COMMON_BUILD_TYPE} -DCMAKE_CXX_STANDARD=${COMMON_CXX_STANDARD}
-    cmake --build ${COMMS_BUILD_DIR} --config ${COMMON_BUILD_TYPE} --target install ${procs_param}
+    mkdir -p ${CC_ASN1_COMMSDSL_BUILD_DIR}
+    cmake -S ${CC_ASN1_COMMSDSL_SRC_DIR} -B ${CC_ASN1_COMMSDSL_BUILD_DIR} -DCMAKE_INSTALL_PREFIX=${CC_ASN1_COMMSDSL_INSTALL_DIR} -DCMAKE_BUILD_TYPE=${COMMON_BUILD_TYPE} -DCMAKE_CXX_STANDARD=${COMMON_CXX_STANDARD}
+    cmake --build ${CC_ASN1_COMMSDSL_BUILD_DIR} --config ${COMMON_BUILD_TYPE} --target install ${procs_param}
 }
 
 set -e
