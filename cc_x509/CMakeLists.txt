@@ -53,6 +53,14 @@ set (install_dir ${CMAKE_INSTALL_PREFIX})
 execute_process (
     COMMAND ${CMAKE_COMMAND} -E make_directory "${build_dir}")
 
+set (readme_src_file "${CMAKE_CURRENT_SOURCE_DIR}/readme.generated")
+set (readme_tgt_file "${output_dir}/README.md")
+add_custom_command(
+    OUTPUT ${readme_tgt_file}
+    DEPENDS ${output_tgt} 
+    COMMAND ${CMAKE_COMMAND} -E copy ${readme_src_file} ${readme_tgt_file}
+)    
+
 add_custom_target(${build_tgt} ALL
     COMMAND ${CMAKE_COMMAND} -E make_directory "${build_dir}"
     COMMAND 
@@ -66,8 +74,8 @@ add_custom_target(${build_tgt} ALL
     COMMAND
         ${CMAKE_COMMAND} --build ${build_dir} --config ${CMAKE_BUILD_TYPE} --target install
     WORKING_DIRECTORY ${build_dir}
-    DEPENDS ${output_tgt})    
-
+    DEPENDS ${output_tgt} ${readme_tgt_file})    
+    
 if (CC_X509_BUILD_DOC)
     find_package (Doxygen REQUIRED)
 

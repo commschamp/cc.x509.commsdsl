@@ -25,6 +25,10 @@ if (NOT CC_X509_DEF_OUTPUT_DIR)
     set (CC_X509_DEF_OUTPUT_DIR "${PROJECT_BINARY_DIR}/output")
 endif ()
 
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "")
+    set (CMAKE_BUILD_TYPE "None")
+endif ()
+
 ################################################
 
 set (CMAKE_SCIPTS_DIR "${PROJECT_SOURCE_DIR}/cmake")
