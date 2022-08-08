@@ -36,7 +36,7 @@ add_custom_target(${rm_tmp_tgt}
 add_custom_command(
     OUTPUT ${tmp_output_dir}
     DEPENDS ${schema_files} ${rm_tmp_tgt}
-    COMMAND ${COMMSDSL2COMMS_EXE} -d -s --warn-as-err -o ${tmp_output_dir} ${code_input_param} ${CC_X509_COMMSDSL2COMMS_EXTRA_ARGS} ${schema_files}
+    COMMAND ${COMMSDSL2COMMS_EXE} -d -s -V ${VERSION} --warn-as-err -o ${tmp_output_dir} ${code_input_param} ${CC_X509_COMMSDSL2COMMS_EXTRA_ARGS} ${schema_files}
 )
 
 set (output_tgt ${name}_output_tgt)

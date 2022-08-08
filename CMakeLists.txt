@@ -29,6 +29,8 @@ if ("${CMAKE_BUILD_TYPE}" STREQUAL "")
     set (CMAKE_BUILD_TYPE "None")
 endif ()
 
+set (VERSION "0.1")
+
 ################################################
 
 set (CMAKE_SCIPTS_DIR "${PROJECT_SOURCE_DIR}/cmake")
