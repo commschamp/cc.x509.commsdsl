@@ -52,7 +52,7 @@ add_custom_target(${build_tgt} ALL
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} 
             -DCMAKE_CXX_STANDARD=${COMMSDSL_TESTS_CXX_STANDARD}
             -DCMAKE_INSTALL_PREFIX=${install_dir}
-            -DCMAKE_PREFIX_PATH="\"${CMAKE_PREFIX_PATH}\""
+            -DCMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH}"
     COMMAND
         ${CMAKE_COMMAND} --build ${build_dir} --config ${CMAKE_BUILD_TYPE} --target install
     WORKING_DIRECTORY ${build_dir}
