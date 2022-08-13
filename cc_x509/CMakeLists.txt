@@ -55,32 +55,47 @@ execute_process (
 
 set (readme_src_file "${CMAKE_CURRENT_SOURCE_DIR}/readme.generated")
 set (readme_tgt_file "${output_dir}/README.md")
-add_custom_command(
-    OUTPUT ${readme_tgt_file}
-    DEPENDS ${output_tgt} 
-    COMMAND ${CMAKE_COMMAND} -E copy ${readme_src_file} ${readme_tgt_file}
-)    
 
-add_custom_target(${build_tgt} ALL
-    COMMAND ${CMAKE_COMMAND} -E make_directory "${build_dir}"
+add_custom_target("copy_readme_file"
     COMMAND 
-        ${CMAKE_COMMAND} 
-            ${output_dir}
-            -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-            -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE} -DCMAKE_GENERATOR=${CMAKE_GENERATOR}
-            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} 
-            -DCMAKE_INSTALL_PREFIX=${install_dir}
-            -DOPT_REQUIRE_COMMS_LIB=OFF
-    COMMAND
-        ${CMAKE_COMMAND} --build ${build_dir} --config ${CMAKE_BUILD_TYPE} --target install
-    WORKING_DIRECTORY ${build_dir}
-    DEPENDS ${output_tgt} ${readme_tgt_file})    
-    
+        ${CMAKE_COMMAND} -E copy ${readme_src_file} ${readme_tgt_file}
+    DEPENDS ${output_tgt} ${readme_src_file})
+
+execute_process (
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${build_dir}")
+
+execute_process (
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${output_dir}")        
+
+execute_process (
+    COMMAND ${CMAKE_COMMAND} -E touch "${output_dir}/dummy.txt")    
+
+include(ExternalProject)
+ExternalProject_Add(
+    ${build_tgt}
+    BUILD_ALWAYS TRUE
+    DEPENDS ${output_tgt} ${copy_readme_file}
+    SOURCE_DIR ${output_dir}
+    BINARY_DIR ${build_dir}
+    INSTALL_DIR ${install_dir}
+    CMAKE_GENERATOR ${CMAKE_GENERATOR}
+    CMAKE_ARGS 
+        -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+        -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE} -DCMAKE_GENERATOR=${CMAKE_GENERATOR}
+        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} 
+        -DCMAKE_INSTALL_PREFIX=${install_dir}
+        -DOPT_REQUIRE_COMMS_LIB=OFF
+)   
+
 if (CC_X509_BUILD_DOC)
     find_package (Doxygen REQUIRED)
 
-    add_custom_target(doc_${name} ALL
+    ExternalProject_Add_Step(
+        ${build_tgt}
+        "doc"
         COMMAND ${CMAKE_COMMAND} --build ${build_dir} --target doc_${name}
-        DEPENDS ${build_tgt} 
-    )
+        DEPENDEES "build"
+        DEPENDERS "install"
+    )    
+
 endif ()    
