@@ -39,12 +39,19 @@ add_custom_command(
     COMMAND ${COMMSDSL2COMMS_EXE} -d -s -V ${VERSION} --warn-as-err -o ${tmp_output_dir} ${code_input_param} ${CC_X509_COMMSDSL2COMMS_EXTRA_ARGS} ${schema_files}
 )
 
+set (readme_src_file "${CMAKE_CURRENT_SOURCE_DIR}/readme.generated")
+set (readme_tgt_file "${tmp_output_dir}/README.md")
+add_custom_target("copy_readme_file" ALL
+    COMMAND 
+        ${CMAKE_COMMAND} -E copy ${readme_src_file} ${readme_tgt_file}
+    DEPENDS ${readme_src_file} ${tmp_output_dir})
+
 set (output_tgt ${name}_output_tgt)
 add_custom_target(${output_tgt} ALL
     COMMAND ${CMAKE_COMMAND}
         -DGENERATED="${tmp_output_dir}" -DOUTPUT="${output_dir}" -DCLEANUP_DIRS="doc\;include" 
         -P "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake"
-    DEPENDS ${tmp_output_dir} "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake" ${schema_files})
+    DEPENDS ${tmp_output_dir} "copy_readme_file" "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake" ${schema_files})
 
 set (build_tgt ${X509_BUILD_TGT})
 set (build_dir ${CMAKE_CURRENT_BINARY_DIR}/build)
@@ -52,14 +59,6 @@ set (install_dir ${CMAKE_INSTALL_PREFIX})
 
 execute_process (
     COMMAND ${CMAKE_COMMAND} -E make_directory "${build_dir}")
-
-set (readme_src_file "${CMAKE_CURRENT_SOURCE_DIR}/readme.generated")
-set (readme_tgt_file "${output_dir}/README.md")
-
-add_custom_target("copy_readme_file"
-    COMMAND 
-        ${CMAKE_COMMAND} -E copy ${readme_src_file} ${readme_tgt_file}
-    DEPENDS ${output_tgt} ${readme_src_file})
 
 execute_process (
     COMMAND ${CMAKE_COMMAND} -E make_directory "${build_dir}")
@@ -74,7 +73,7 @@ include(ExternalProject)
 ExternalProject_Add(
     ${build_tgt}
     BUILD_ALWAYS TRUE
-    DEPENDS ${output_tgt} ${copy_readme_file}
+    DEPENDS ${output_tgt} 
     SOURCE_DIR ${output_dir}
     BINARY_DIR ${build_dir}
     INSTALL_DIR ${install_dir}
