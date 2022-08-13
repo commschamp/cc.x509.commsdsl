@@ -42,7 +42,7 @@ add_custom_command(
 set (output_tgt ${name}_output_tgt)
 add_custom_target(${output_tgt} ALL
     COMMAND ${CMAKE_COMMAND}
-        -DGENERATED="${tmp_output_dir}" -DOUTPUT="${output_dir}" -DCLEANUP_DIRS="doc;include" 
+        -DGENERATED="${tmp_output_dir}" -DOUTPUT="${output_dir}" -DCLEANUP_DIRS="doc\;include" 
         -P "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake"
     DEPENDS ${tmp_output_dir} "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake" ${schema_files})
 
