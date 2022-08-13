@@ -65,10 +65,10 @@ execute_process (
     COMMAND ${CMAKE_COMMAND} -E make_directory "${build_dir}")
 
 execute_process (
-    COMMAND ${CMAKE_COMMAND} -E make_directory "${output_dir}")        
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${output_dir}/include")        
 
 execute_process (
-    COMMAND ${CMAKE_COMMAND} -E touch "${output_dir}/dummy.txt")    
+    COMMAND ${CMAKE_COMMAND} -E touch "${output_dir}/include/dummy.txt")    
 
 include(ExternalProject)
 ExternalProject_Add(
