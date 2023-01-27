@@ -3,12 +3,6 @@ find_program(COMMSDSL2COMMS_EXE "commsdsl2comms" PATH_SUFFIXES bin REQUIRED)
 set (name ${PROJECT_NAME})
 set (output_dir ${CMAKE_CURRENT_BINARY_DIR}/output)
 set (tmp_output_dir ${output_dir}.tmp)
-set (schema_files 
-    ${CC_X509_ASN1_SCHEMA} 
-    ${CMAKE_CURRENT_SOURCE_DIR}/dsl/main_schema.xml
-    ${CC_X509_ASN1_EMB_SCHEMA} 
-    ${CMAKE_CURRENT_SOURCE_DIR}/dsl/fields_schema.xml)
-
 
 if (NOT "${CC_X509_DEF_OUTPUT_DIR}" STREQUAL "")
     set (output_dir ${CC_X509_DEF_OUTPUT_DIR})
@@ -35,8 +29,8 @@ add_custom_target(${rm_tmp_tgt}
 
 add_custom_command(
     OUTPUT ${tmp_output_dir}
-    DEPENDS ${schema_files} ${rm_tmp_tgt}
-    COMMAND ${COMMSDSL2COMMS_EXE} -d -s -V ${VERSION} --warn-as-err -o ${tmp_output_dir} ${code_input_param} ${CC_X509_COMMSDSL2COMMS_EXTRA_ARGS} ${schema_files}
+    DEPENDS ${CC_X509_SCHEMA_FILES} ${rm_tmp_tgt}
+    COMMAND ${COMMSDSL2COMMS_EXE} -d -s -V ${VERSION} --warn-as-err -o ${tmp_output_dir} ${code_input_param} ${CC_X509_COMMSDSL2COMMS_EXTRA_ARGS} ${CC_X509_SCHEMA_FILES}
 )
 
 set (readme_src_file "${CMAKE_CURRENT_SOURCE_DIR}/readme.generated")
@@ -51,7 +45,7 @@ add_custom_target(${output_tgt} ALL
     COMMAND ${CMAKE_COMMAND}
         -DGENERATED="${tmp_output_dir}" -DOUTPUT="${output_dir}" -DCLEANUP_DIRS="doc\;include" 
         -P "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake"
-    DEPENDS ${tmp_output_dir} "copy_readme_file" "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake" ${schema_files})
+    DEPENDS ${tmp_output_dir} "copy_readme_file" "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake" ${CC_X509_SCHEMA_FILES})
 
 set (build_tgt ${X509_BUILD_TGT})
 set (build_dir ${CMAKE_CURRENT_BINARY_DIR}/build)

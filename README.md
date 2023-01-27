@@ -40,6 +40,11 @@ invocation:
 $> cmake .. -DCC_X509_BUILD_APPS=ON ...
 ```
 
+The project's cmake configuration [options](CMakeLists.txt) allow building
+bindings to other high level programming languages using [swig](https://www.swig.org/)
+and [emscripten](https://emscripten.org/), see relevant commsdsl's
+[documentation](https://github.com/commschamp/commsdsl/tree/master/doc) pages for details.
+
 # How to Use
 The [generated](https://github.com/commschamp/cc.x509.generated) code has a definition of the certificate
 field in [include/cc_x509/field/Certificate.h](https://github.com/commschamp/cc.x509.generated/blob/master/include/cc_x509/field/Certificate.h).
