@@ -39,7 +39,7 @@ if ("${CMAKE_BUILD_TYPE}" STREQUAL "")
     set (CMAKE_BUILD_TYPE "None")
 endif ()
 
-set (VERSION "0.3.1")
+set (VERSION "0.4")
 
 ################################################
 
