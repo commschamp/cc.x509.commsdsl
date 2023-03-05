@@ -62,6 +62,7 @@ if (CC_X509_BUILD_SWIG)
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_EXE_LINKER_FLAGS=${CMAKE_EXE_LINKER_FLAGS}        
             -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
             -DCMAKE_PREFIX_PATH=${combined_prefix_path_str}
+            -DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}
             -DOPT_SWIG_LANGUAGES=${combined_languages_str}
         INSTALL_COMMAND
             ${CMAKE_COMMAND} -E echo "Skipping install"            

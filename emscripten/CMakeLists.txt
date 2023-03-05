@@ -56,6 +56,7 @@ if (CC_X509_BUILD_EMSCRIPTEN)
         CMAKE_ARGS
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} 
             -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+            -DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}
             -DOPT_MODULARIZE=ON
             -DOPT_EXTRA_INCLUDE_DIRS=${extra_includes_path_str}
     )  
