@@ -26,7 +26,7 @@ add_custom_target("emscripten_output_tgt" ALL
     COMMAND ${CMAKE_COMMAND}
         -DGENERATED="${emscripten_tmp_dir}" -DOUTPUT="${CC_X509_EMSCRIPTEN_OUTPUT_DIR}"
         -P "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake"        
-    DEPENDS ${emscripten_tmp_dir} ${readme_file} "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake" ${CC_X509_SCHEMA_FILES})
+    DEPENDS ${emscripten_tmp_dir} "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake" ${CC_X509_SCHEMA_FILES})
 
 if (CC_X509_BUILD_EMSCRIPTEN)
     execute_process(
@@ -51,11 +51,12 @@ if (CC_X509_BUILD_EMSCRIPTEN)
         SOURCE_DIR ${CC_X509_EMSCRIPTEN_OUTPUT_DIR}
         BINARY_DIR ${emscripten_build_dir}
         CMAKE_COMMAND ${EMCMAKE_EXECUTABLE} ${CMAKE_COMMAND}
-        CMAKE_GENERATOR ${CMAKE_GENERATOR}
         LIST_SEPARATOR |
         CMAKE_ARGS
+            -DCMAKE_GENERATOR=${CMAKE_GENERATOR} -DCMAKE_GENERATOR_PLATFORM=${CMAKE_GENERATOR_PLATFORM}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} 
             -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+            -DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}
             -DOPT_MODULARIZE=ON
             -DOPT_EXTRA_INCLUDE_DIRS=${extra_includes_path_str}
     )  
