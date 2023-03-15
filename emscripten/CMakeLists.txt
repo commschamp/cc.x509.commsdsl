@@ -26,7 +26,7 @@ add_custom_target("emscripten_output_tgt" ALL
     COMMAND ${CMAKE_COMMAND}
         -DGENERATED="${emscripten_tmp_dir}" -DOUTPUT="${CC_X509_EMSCRIPTEN_OUTPUT_DIR}"
         -P "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake"        
-    DEPENDS ${emscripten_tmp_dir} ${readme_file} "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake" ${CC_X509_SCHEMA_FILES})
+    DEPENDS ${emscripten_tmp_dir} "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake" ${CC_X509_SCHEMA_FILES})
 
 if (CC_X509_BUILD_EMSCRIPTEN)
     execute_process(
