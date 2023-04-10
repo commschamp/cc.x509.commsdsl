@@ -30,7 +30,7 @@ add_custom_target(${rm_tmp_tgt}
 add_custom_command(
     OUTPUT ${tmp_output_dir}
     DEPENDS ${CC_X509_SCHEMA_FILES} ${rm_tmp_tgt}
-    COMMAND ${COMMSDSL2COMMS_EXE} -d -s -V ${VERSION} --warn-as-err -o ${tmp_output_dir} ${code_input_param} ${CC_X509_COMMSDSL2COMMS_EXTRA_ARGS} ${CC_X509_SCHEMA_FILES}
+    COMMAND ${COMMSDSL2COMMS_EXE} -d -s -V ${CC_X509_VERSION} --warn-as-err -o ${tmp_output_dir} ${code_input_param} ${CC_X509_COMMSDSL2COMMS_EXTRA_ARGS} ${CC_X509_SCHEMA_FILES}
 )
 
 set (readme_src_file "${CMAKE_CURRENT_SOURCE_DIR}/readme.generated")
