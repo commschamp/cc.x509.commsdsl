@@ -1,4 +1,8 @@
 find_program(COMMSDSL2COMMS_EXE "commsdsl2comms" PATH_SUFFIXES bin REQUIRED)
+execute_process(COMMAND "${COMMSDSL2COMMS_EXE}" --version OUTPUT_VARIABLE commsdsl2comms_version)
+if ("${commsdsl2comms_version}" VERSION_LESS "${CC_X509_MIN_COMMSDSL_VERSION}")
+    message (FATAL_ERROR "Version of commsdsl2comms is too old, required minimum is v${CC_X509_MIN_COMMSDSL_VERSION}.")
+endif ()
 
 set (name ${PROJECT_NAME})
 set (output_dir ${CMAKE_CURRENT_BINARY_DIR}/output)

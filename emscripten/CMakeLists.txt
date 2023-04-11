@@ -9,6 +9,11 @@ endif ()
 find_program(COMMSDSL2EMSCRIPTEN commsdsl2emscripten PATH_SUFFIXES bin REQUIRED)    
 find_program(EMCMAKE_EXECUTABLE emcmake REQUIRED)    
 
+execute_process(COMMAND "${COMMSDSL2EMSCRIPTEN}" --version OUTPUT_VARIABLE commsdsl2emscirpten_version)
+if ("${commsdsl2emscirpten_version}" VERSION_LESS "${CC_X509_MIN_COMMSDSL_VERSION}")
+    message (FATAL_ERROR "Version of commsdsl2emscirpten is too old, required minimum is v${CC_X509_MIN_COMMSDSL_VERSION}.")
+endif ()
+
 set (emscripten_tmp_dir "${CMAKE_BINARY_DIR}/output_emscripten.tmp")
 
 add_custom_target(rm_emscripten_tmp_tgt
