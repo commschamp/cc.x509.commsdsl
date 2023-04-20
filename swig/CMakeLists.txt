@@ -16,6 +16,11 @@ endif ()
 
 find_program(COMMSDSL2SWIG commsdsl2swig PATH_SUFFIXES bin REQUIRED)    
 
+execute_process(COMMAND "${COMMSDSL2SWIG}" --version OUTPUT_VARIABLE commsdsl2swig_version)
+if ("${commsdsl2swig_version}" VERSION_LESS "${CC_X509_MIN_COMMSDSL_VERSION}")
+    message (FATAL_ERROR "Version of commsdsl2swig is too old, required minimum is v${CC_X509_MIN_COMMSDSL_VERSION}.")
+endif ()
+
 set (swig_tmp_dir "${CMAKE_BINARY_DIR}/output_swig.tmp")
 
 add_custom_target(rm_swig_tmp_tgt

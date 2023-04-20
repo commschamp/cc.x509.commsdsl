@@ -1,4 +1,8 @@
 find_program(COMMSDSL2COMMS_EXE "commsdsl2comms" PATH_SUFFIXES bin REQUIRED)
+execute_process(COMMAND "${COMMSDSL2COMMS_EXE}" --version OUTPUT_VARIABLE commsdsl2comms_version)
+if ("${commsdsl2comms_version}" VERSION_LESS "${CC_X509_MIN_COMMSDSL_VERSION}")
+    message (FATAL_ERROR "Version of commsdsl2comms is too old, required minimum is v${CC_X509_MIN_COMMSDSL_VERSION}.")
+endif ()
 
 set (name ${PROJECT_NAME})
 set (output_dir ${CMAKE_CURRENT_BINARY_DIR}/output)
@@ -30,7 +34,7 @@ add_custom_target(${rm_tmp_tgt}
 add_custom_command(
     OUTPUT ${tmp_output_dir}
     DEPENDS ${CC_X509_SCHEMA_FILES} ${rm_tmp_tgt}
-    COMMAND ${COMMSDSL2COMMS_EXE} -d -s -V ${VERSION} --warn-as-err -o ${tmp_output_dir} ${code_input_param} ${CC_X509_COMMSDSL2COMMS_EXTRA_ARGS} ${CC_X509_SCHEMA_FILES}
+    COMMAND ${COMMSDSL2COMMS_EXE} -d -s -V ${CC_X509_VERSION} --warn-as-err -o ${tmp_output_dir} ${code_input_param} ${CC_X509_COMMSDSL2COMMS_EXTRA_ARGS} ${CC_X509_SCHEMA_FILES}
 )
 
 set (readme_src_file "${CMAKE_CURRENT_SOURCE_DIR}/readme.generated")
