@@ -66,6 +66,8 @@ if ((NOT CC_X509_ASN1_SCHEMA) OR (NOT CC_X509_ASN1_EMB_SCHEMA))
     message (FATAL_ERROR "The required ASN.1 definition schema is not found.")
 endif ()
 
+message (STATUS "Found ASN.1 schema files: ${CC_X509_ASN1_SCHEMA};${CC_X509_ASN1_EMB_SCHEMA}")
+
 get_filename_component(asn1_dir ${CC_X509_ASN1_SCHEMA} DIRECTORY)
 set (CC_X509_ASN1_DSL_SRC ${asn1_dir}/../dsl_src)
 
