@@ -59,8 +59,12 @@ CC_X509_msvc_force_warn_opt("/W4")
 
 set (X509_BUILD_TGT "${PROJECT_NAME}_build_tgt")
 
-find_file(CC_X509_ASN1_SCHEMA "schema.xml" PATH_SUFFIXES cc_asn1/dsl share/cc_asn1/dsl usr/share/cc_asn1/dsl)
-find_file(CC_X509_ASN1_EMB_SCHEMA "emb_schema.xml" PATH_SUFFIXES cc_asn1/dsl share/cc_asn1/dsl usr/share/cc_asn1/dsl)
+find_file(
+    CC_X509_ASN1_SCHEMA "schema.xml" 
+    PATH_SUFFIXES cc_asn1/dsl share/cc_asn1/dsl usr/share/cc_asn1/dsl src/cc_asn1/dsl usr/src/cc_asn1/dsl)
+find_file(
+    CC_X509_ASN1_EMB_SCHEMA "emb_schema.xml" 
+    PATH_SUFFIXES cc_asn1/dsl share/cc_asn1/dsl usr/share/cc_asn1/dsl src/cc_asn1/dsl usr/src/cc_asn1/dsl)
 
 if ((NOT CC_X509_ASN1_SCHEMA) OR (NOT CC_X509_ASN1_EMB_SCHEMA))
     message (FATAL_ERROR "The required ASN.1 definition schema is not found.")
