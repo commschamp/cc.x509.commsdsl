@@ -1,8 +1,6 @@
 image:
     - Visual Studio 2022  
     - Visual Studio 2019  
-    - Visual Studio 2017    
-
 
 init:
     - git config --global core.autocrlf input
@@ -19,9 +17,9 @@ configuration:
     - Release
 
 environment:
-    COMMS_BRANCH: v5.2.1
-    COMMSDSL_BRANCH: v6.2.4
-    CC_ASN1_COMMSDSL_BRANCH: v0.1
+    COMMS_BRANCH: v5.2.2
+    COMMSDSL_BRANCH: v6.3
+    CC_ASN1_COMMSDSL_BRANCH: v0.2
     matrix:
         - CPP_STD: 11
         - CPP_STD: 14
@@ -45,13 +43,17 @@ install:
     - set COMMON_INSTALL_DIR=%BUILD_DIR%\install
     - set COMMON_BUILD_TYPE=%CONFIGURATION%
     - set COMMON_CXX_STANDARD=%CPP_STD%
+    - set GENERATOR="%CMAKE_GENERATOR%"
+    - set PLATFORM="%CMAKE_PLATFORM%"    
     - call script\prepare_externals.bat
 
 build_script:
     - echo ------------------------- Building Project -------------------------
     - cd %BUILD_DIR%
-    - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX="%COMMON_INSTALL_DIR%" -DCMAKE_PREFIX_PATH="%COMMON_INSTALL_DIR%" -DCMAKE_CXX_STANDARD=%CPP_STD% -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DCC_X509_BUILD_APPS=ON
-    - cmake --build . --config %CONFIGURATION%
+    - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -G "%CMAKE_GENERATOR%" %PLATFORM_PARAM% ^
+        -DCMAKE_INSTALL_PREFIX="%COMMON_INSTALL_DIR%" -DCMAKE_PREFIX_PATH="%COMMON_INSTALL_DIR%" ^
+        -DCMAKE_CXX_STANDARD=%CPP_STD% -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DCC_X509_BUILD_APPS=ON
+    - cmake --build . --config %CONFIGURATION% --parallel %NUMBER_OF_PROCESSORS%
 
 
 

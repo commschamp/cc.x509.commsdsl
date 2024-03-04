@@ -24,7 +24,7 @@ add_custom_command(
     OUTPUT ${emscripten_tmp_dir}
     DEPENDS ${CC_X509_SCHEMA_FILES} ${src_files} rm_emscripten_tmp_tgt
     COMMAND ${COMMSDSL2EMSCRIPTEN} -s ${warn_as_error} ${COMMSDSL2EMSCRIPTEN_EXTRA_ARGS}
-        -o ${emscripten_tmp_dir} ${CC_X509_SCHEMA_FILES}
+        -o ${emscripten_tmp_dir} -c ${CMAKE_CURRENT_SOURCE_DIR}/src ${CC_X509_SCHEMA_FILES}
 )
 
 add_custom_target("emscripten_output_tgt" ALL
