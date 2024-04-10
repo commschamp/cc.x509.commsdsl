@@ -8,6 +8,7 @@ rem COMMS_REPO - (Optional) Repository of the COMMS library
 rem COMMS_TAG - (Optional) Tag of the COMMS library
 rem COMMSDSL_REPO - (Optional) Repository of the commsdsl code generators
 rem COMMSDSL_TAG - (Optional) Tag of the commdsl
+rem COMMSDSL_PLATFORM - (Optional) Tag of the commdsl
 rem CC_ASN1_COMMSDSL_REPO - (Optional) Repository of the cc.asn1.commsdsl
 rem CC_ASN1_COMMSDSL_TAG - (Optional) Tag of the cc.asn1.commsdsl
 rem COMMON_INSTALL_DIR - (Optional) Common directory to perform installations
@@ -18,7 +19,7 @@ rem -----------------------------------------------------
 
 if [%BUILD_DIR%] == [] echo "BUILD_DIR hasn't been specified" & exit /b 1
 
-if [%GENERATOR%] == [] set GENERATOR="NMake Makefiles"
+if NOT [%GENERATOR%] == [] set GENERATOR_PARAM=-G %GENERATOR%
 
 if NOT [%PLATFORM%] == [] set PLATFORM_PARAM=-A %PLATFORM%
 
@@ -31,6 +32,9 @@ if [%COMMS_TAG%] == [] set COMMS_TAG="master"
 if [%COMMSDSL_REPO%] == [] set COMMSDSL_REPO="https://github.com/commschamp/commsdsl.git"
 
 if [%COMMSDSL_TAG%] == [] set COMMSDSL_TAG="master"
+
+set COMMSDSL_PLATFORM_PARAM=%PLATFORM_PARAM%
+if NOT [%COMMSDSL_PLATFORM%] == [] set COMMSDSL_PLATFORM_PARAM=-A %COMMSDSL_PLATFORM%
 
 if [%CC_ASN1_COMMSDSL_REPO%] == [] set CC_ASN1_COMMSDSL_REPO="https://github.com/commschamp/cc.asn1.commsdsl.git"
 
@@ -73,7 +77,7 @@ if exist %COMMS_SRC_DIR%/.git (
 echo "Building COMMS library..."
 mkdir "%COMMS_BUILD_DIR%"
 cd %COMMS_BUILD_DIR%
-cmake -G %GENERATOR% %PLATFORM_PARAM% -S %COMMS_SRC_DIR% -B %COMMS_BUILD_DIR% -DCMAKE_INSTALL_PREFIX=%COMMS_INSTALL_DIR% ^
+cmake %GENERATOR_PARAM% %PLATFORM_PARAM% -S %COMMS_SRC_DIR% -B %COMMS_BUILD_DIR% -DCMAKE_INSTALL_PREFIX=%COMMS_INSTALL_DIR% ^
     -DCMAKE_BUILD_TYPE=%COMMON_BUILD_TYPE% -DCMAKE_CXX_STANDARD=%COMMON_CXX_STANDARD%
 if %errorlevel% neq 0 exit /b %errorlevel%
 cmake --build %COMMS_BUILD_DIR% --config %COMMON_BUILD_TYPE% --target install
@@ -97,7 +101,7 @@ if exist %COMMSDSL_SRC_DIR%/.git (
 echo "Building commsdsl ..."
 mkdir "%COMMSDSL_BUILD_DIR%"
 cd %COMMSDSL_BUILD_DIR%
-cmake -G %GENERATOR% %PLATFORM_PARAM% -S %COMMSDSL_SRC_DIR% -B %COMMSDSL_BUILD_DIR% ^
+cmake %GENERATOR_PARAM% %COMMSDSL_PLATFORM_PARAM% -S %COMMSDSL_SRC_DIR% -B %COMMSDSL_BUILD_DIR% ^
     -DCMAKE_INSTALL_PREFIX=%COMMSDSL_INSTALL_DIR% -DCMAKE_BUILD_TYPE=%COMMON_BUILD_TYPE% ^
     -DCOMMSDSL_INSTALL_LIBRARY=OFF -DCOMMSDSL_BUILD_COMMSDSL2TEST=ON -DCOMMSDSL_BUILD_COMMSDSL2TOOLS_QT=ON
 if %errorlevel% neq 0 exit /b %errorlevel%
