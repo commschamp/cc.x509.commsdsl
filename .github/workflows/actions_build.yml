@@ -3,9 +3,9 @@ name: Github Actions Build
 on: [push]
 
 env:
-  COMMS_BRANCH: v5.2.2
-  COMMSDSL_BRANCH: v6.3
-  CC_ASN1_COMMSDSL_BRANCH: v0.2
+  COMMS_TAG: v5.2.3
+  COMMSDSL_TAG: v6.3.2
+  CC_ASN1_COMMSDSL_TAG: v0.2
 
 jobs:
   build_gcc_old_ubuntu_20_04:
@@ -18,7 +18,7 @@ jobs:
         cpp: [11]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - name: Add repositories
       run: |
@@ -47,9 +47,9 @@ jobs:
         COMMON_INSTALL_DIR: ${{runner.workspace}}/build/install
         COMMON_BUILD_TYPE: ${{matrix.type}}
         COMMON_CXX_STANDARD: ${{matrix.cpp}}
-        COMMS_TAG: ${{env.COMMS_BRANCH}}
-        COMMSDSL_TAG: ${{env.COMMSDSL_BRANCH}}
-        CC_ASN1_COMMSDSL_TAG: ${{env.CC_ASN1_COMMSDSL_BRANCH}}
+        COMMS_TAG: ${{env.COMMS_TAG}}
+        COMMSDSL_TAG: ${{env.COMMSDSL_TAG}}
+        CC_ASN1_COMMSDSL_TAG: ${{env.CC_ASN1_COMMSDSL_TAG}}
 
     - name: Configure CMake
       shell: bash
@@ -82,7 +82,7 @@ jobs:
           - cc_ver: 7
             cpp: 17            
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - name: Add repositories
       run: |
@@ -111,9 +111,9 @@ jobs:
         COMMON_INSTALL_DIR: ${{runner.workspace}}/build/install
         COMMON_BUILD_TYPE: ${{matrix.type}}
         COMMON_CXX_STANDARD: ${{matrix.cpp}}
-        COMMS_TAG: ${{env.COMMS_BRANCH}}
-        COMMSDSL_TAG: ${{env.COMMSDSL_BRANCH}}
-        CC_ASN1_COMMSDSL_TAG: ${{env.CC_ASN1_COMMSDSL_BRANCH}}
+        COMMS_TAG: ${{env.COMMS_TAG}}
+        COMMSDSL_TAG: ${{env.COMMSDSL_TAG}}
+        CC_ASN1_COMMSDSL_TAG: ${{env.CC_ASN1_COMMSDSL_TAG}}
 
     - name: Configure CMake
       shell: bash
@@ -140,7 +140,7 @@ jobs:
         cpp: [11, 14, 17, 20]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - name: Prepare Install
       run: sudo apt-get update --fix-missing    
@@ -162,9 +162,9 @@ jobs:
         COMMON_INSTALL_DIR: ${{runner.workspace}}/build/install
         COMMON_BUILD_TYPE: ${{matrix.type}}
         COMMON_CXX_STANDARD: ${{matrix.cpp}}
-        COMMS_TAG: ${{env.COMMS_BRANCH}}
-        COMMSDSL_TAG: ${{env.COMMSDSL_BRANCH}}
-        CC_ASN1_COMMSDSL_TAG: ${{env.CC_ASN1_COMMSDSL_BRANCH}}
+        COMMS_TAG: ${{env.COMMS_TAG}}
+        COMMSDSL_TAG: ${{env.COMMSDSL_TAG}}
+        CC_ASN1_COMMSDSL_TAG: ${{env.CC_ASN1_COMMSDSL_TAG}}
 
     - name: Configure CMake
       shell: bash
@@ -198,7 +198,7 @@ jobs:
 
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - name: Add repositories
       run: |
@@ -228,9 +228,9 @@ jobs:
         COMMON_INSTALL_DIR: ${{runner.workspace}}/build/install
         COMMON_BUILD_TYPE: ${{matrix.type}}
         COMMON_CXX_STANDARD: ${{matrix.cpp}}
-        COMMS_TAG: ${{env.COMMS_BRANCH}}
-        COMMSDSL_TAG: ${{env.COMMSDSL_BRANCH}}
-        CC_ASN1_COMMSDSL_TAG: ${{env.CC_ASN1_COMMSDSL_BRANCH}}
+        COMMS_TAG: ${{env.COMMS_TAG}}
+        COMMSDSL_TAG: ${{env.COMMSDSL_TAG}}
+        CC_ASN1_COMMSDSL_TAG: ${{env.CC_ASN1_COMMSDSL_TAG}}
 
     - name: Configure CMake
       shell: bash
@@ -262,7 +262,7 @@ jobs:
             cpp: 20
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - name: Prepare Install
       run: sudo apt-get update --fix-missing    
@@ -284,9 +284,9 @@ jobs:
         COMMON_INSTALL_DIR: ${{runner.workspace}}/build/install
         COMMON_BUILD_TYPE: ${{matrix.type}}
         COMMON_CXX_STANDARD: ${{matrix.cpp}}
-        COMMS_TAG: ${{env.COMMS_BRANCH}}
-        COMMSDSL_TAG: ${{env.COMMSDSL_BRANCH}}
-        CC_ASN1_COMMSDSL_TAG: ${{env.CC_ASN1_COMMSDSL_BRANCH}}
+        COMMS_TAG: ${{env.COMMS_TAG}}
+        COMMSDSL_TAG: ${{env.COMMSDSL_TAG}}
+        CC_ASN1_COMMSDSL_TAG: ${{env.CC_ASN1_COMMSDSL_TAG}}
 
     - name: Configure CMake
       shell: bash
@@ -313,7 +313,7 @@ jobs:
         cpp: [11, 14, 17, 20]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - name: Prepare Install
       run: sudo apt-get update --fix-missing    
@@ -335,9 +335,9 @@ jobs:
         COMMON_INSTALL_DIR: ${{runner.workspace}}/build/install
         COMMON_BUILD_TYPE: ${{matrix.type}}
         COMMON_CXX_STANDARD: ${{matrix.cpp}}
-        COMMS_TAG: ${{env.COMMS_BRANCH}}
-        COMMSDSL_TAG: ${{env.COMMSDSL_BRANCH}}
-        CC_ASN1_COMMSDSL_TAG: ${{env.CC_ASN1_COMMSDSL_BRANCH}}
+        COMMS_TAG: ${{env.COMMS_TAG}}
+        COMMSDSL_TAG: ${{env.COMMSDSL_TAG}}
+        CC_ASN1_COMMSDSL_TAG: ${{env.CC_ASN1_COMMSDSL_TAG}}
 
     - name: Configure CMake
       shell: bash
@@ -353,6 +353,96 @@ jobs:
     - name: Build Target 
       working-directory: ${{runner.workspace}}/build
       shell: bash
+      run: cmake --build . --config ${{matrix.type}}
+      env:
+        VERBOSE: 1 
+
+  build_msvc_2019:
+    runs-on: windows-2019
+    strategy:
+      fail-fast: false
+      matrix:
+        type: [Debug, Release, MinSizeRel]
+        arch: [Win32, x64]
+        cpp: [11, 14, 17]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Create Build Environment
+      run: cmake -E make_directory ${{runner.workspace}}/build   
+
+    - name: Prepare externals
+      shell: cmd
+      run: |
+        %GITHUB_WORKSPACE%\script\prepare_externals.bat
+      env:
+        BUILD_DIR: ${{runner.workspace}}/build
+        PLATFORM: ${{matrix.arch}}
+        EXTERNALS_DIR: ${{runner.workspace}}/externals
+        COMMON_INSTALL_DIR: ${{runner.workspace}}/build/install
+        COMMON_BUILD_TYPE: ${{matrix.type}}
+        COMMON_CXX_STANDARD: ${{matrix.cpp}}
+        COMMS_TAG: ${{env.COMMS_TAG}}
+        COMMSDSL_TAG: ${{env.COMMSDSL_TAG}}
+        COMMSDSL_PLATFORM: 'x64'
+
+    - name: Configure CMake
+      shell: cmd
+      working-directory: ${{runner.workspace}}/build
+      run: |
+        cmake %GITHUB_WORKSPACE% -A ${{matrix.arch}} -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install ^
+          -DCMAKE_PREFIX_PATH="${{runner.workspace}}/build/install" ^
+          -DCMAKE_CXX_STANDARD=${{matrix.cpp}} -DCC_X509_BUILD_APPS=ON
+
+    - name: Build Target 
+      working-directory: ${{runner.workspace}}/build
+      shell: cmd
+      run: cmake --build . --config ${{matrix.type}}
+      env:
+        VERBOSE: 1 
+
+  build_msvc_2022:
+    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        type: [Debug, Release, MinSizeRel]
+        arch: [Win32, x64]
+        cpp: [11, 14, 17, 20]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Create Build Environment
+      run: cmake -E make_directory ${{runner.workspace}}/build   
+
+    - name: Prepare externals
+      shell: cmd
+      run: |
+        %GITHUB_WORKSPACE%\script\prepare_externals.bat
+      env:
+        BUILD_DIR: ${{runner.workspace}}/build
+        PLATFORM: ${{matrix.arch}}
+        EXTERNALS_DIR: ${{runner.workspace}}/externals
+        COMMON_INSTALL_DIR: ${{runner.workspace}}/build/install
+        COMMON_BUILD_TYPE: ${{matrix.type}}
+        COMMON_CXX_STANDARD: ${{matrix.cpp}}
+        COMMS_TAG: ${{env.COMMS_TAG}}
+        COMMSDSL_TAG: ${{env.COMMSDSL_TAG}}
+        COMMSDSL_PLATFORM: 'x64'
+
+    - name: Configure CMake
+      shell: cmd
+      working-directory: ${{runner.workspace}}/build
+      run: |
+        cmake %GITHUB_WORKSPACE% -A ${{matrix.arch}} -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install ^
+          -DCMAKE_PREFIX_PATH="${{runner.workspace}}/build/install"  ^
+          -DCMAKE_CXX_STANDARD=${{matrix.cpp}} -DCC_X509_BUILD_APPS=ON
+
+    - name: Build Target 
+      working-directory: ${{runner.workspace}}/build
+      shell: cmd
       run: cmake --build . --config ${{matrix.type}}
       env:
         VERBOSE: 1 
