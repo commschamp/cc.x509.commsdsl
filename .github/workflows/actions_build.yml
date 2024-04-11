@@ -353,7 +353,7 @@ jobs:
     - name: Build Target 
       working-directory: ${{runner.workspace}}/build
       shell: bash
-      run: cmake --build . --config ${{matrix.type}} --target install
+      run: cmake --build . --config ${{matrix.type}}
       env:
         VERBOSE: 1 
 
@@ -392,13 +392,13 @@ jobs:
       working-directory: ${{runner.workspace}}/build
       run: |
         cmake %GITHUB_WORKSPACE% -A ${{matrix.arch}} -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install ^
-          -DCMAKE_PREFIX_PATH="${{runner.workspace}}/build/install;${{env.QTDIR}}" ^
+          -DCMAKE_PREFIX_PATH="${{runner.workspace}}/build/install" ^
           -DCMAKE_CXX_STANDARD=${{matrix.cpp}} -DCC_X509_BUILD_APPS=ON
 
     - name: Build Target 
       working-directory: ${{runner.workspace}}/build
       shell: cmd
-      run: cmake --build . --config ${{matrix.type}} --target install
+      run: cmake --build . --config ${{matrix.type}}
       env:
         VERBOSE: 1 
 
@@ -443,7 +443,7 @@ jobs:
     - name: Build Target 
       working-directory: ${{runner.workspace}}/build
       shell: cmd
-      run: cmake --build . --config ${{matrix.type}} --target install
+      run: cmake --build . --config ${{matrix.type}}
       env:
         VERBOSE: 1 
    
