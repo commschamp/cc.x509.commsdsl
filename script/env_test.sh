@@ -7,4 +7,5 @@ mkdir -p ${BUILD_DIR}
 cd ${BUILD_DIR}
 
 cmake .. -DCMAKE_INSTALL_PREFIX=install \
-    -DCMAKE_BUILD_TYPE=Debug -DCC_X509_BUILD_APPS=ON  "$@"
+    -DCMAKE_BUILD_TYPE=Debug -DCC_X509_BUILD_APPS=ON  \
+    -DCC_X509_USE_CCACHE=ON "$@"

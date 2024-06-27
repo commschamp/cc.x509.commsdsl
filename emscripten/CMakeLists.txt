@@ -64,5 +64,7 @@ if (CC_X509_BUILD_EMSCRIPTEN)
             -DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}
             -DOPT_MODULARIZE=ON
             -DOPT_EXTRA_INCLUDE_DIRS=${extra_includes_path_str}
+            -DOPT_USE_CCACHE=${CC_X509_USE_CCACHE}
+            -DOPT_CCACHE_EXECUTABLE=${CC_X509_CCACHE_EXECUTABLE}
     )  
 endif ()

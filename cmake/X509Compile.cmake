@@ -5,6 +5,8 @@
 #     cc_x509_compile(
 #         [WARN_AS_ERR]
 #         [USE_CCACHE]
+#         [CCACHE_EXECUTABLE /path/to/ccache]
+#         [DEFAULT_SANITIZERS]
 #     )
 #
 # - WARN_AS_ERR - Treat warnings as errors.
@@ -21,8 +23,8 @@
 
 macro (cc_x509_compile)
     set (_prefix CC_X509_COMPILE)
-    set (_options WARN_AS_ERR STATIC_RUNTIME USE_CCACHE)
-    set (_oneValueArgs)
+    set (_options WARN_AS_ERR STATIC_RUNTIME USE_CCACHE DEFAULT_SANITIZERS)
+    set (_oneValueArgs CCACHE_EXECUTABLE)
     set (_mutiValueArgs)
     cmake_parse_arguments(${_prefix} "${_options}" "${_oneValueArgs}" "${_mutiValueArgs}" ${ARGN})
    
@@ -72,7 +74,7 @@ macro (cc_x509_compile)
         endif ()
 
         set (CC_X509_SANITIZER_OPTS)
-        if (CC_X509_USE_SANITIZERS AND
+        if (CC_X509_COMPILE_DEFAULT_SANITIZERS AND
             ((CMAKE_COMPILER_IS_GNUCC) OR ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")))
             set (CC_X509_SANITIZER_OPTS 
                 -fno-omit-frame-pointer 
@@ -116,11 +118,14 @@ macro (cc_x509_compile)
     endif ()   
 
     if (CC_X509_COMPILE_USE_CCACHE)
-        find_program(CCACHE_FOUND ccache)
-        if(CCACHE_FOUND)
-            set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
-            set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
-        endif(CCACHE_FOUND)
+        if (NOT CC_X509_COMPILE_CCACHE_EXECUTABLE)
+            find_program(CC_X509_COMPILE_CCACHE_EXECUTABLE ccache)
+        endif ()
+
+        if (CC_X509_COMPILE_CCACHE_EXECUTABLE)
+            set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ${CC_X509_COMPILE_CCACHE_EXECUTABLE})
+            set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ${CC_X509_COMPILE_CCACHE_EXECUTABLE})
+        endif ()
     endif ()      
 endmacro()
 
