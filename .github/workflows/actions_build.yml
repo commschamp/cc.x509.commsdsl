@@ -203,7 +203,9 @@ jobs:
       run: sudo apt-get update --fix-missing    
       
     - name: Install Packages
-      run: sudo apt install libxml2-dev gcc-${{matrix.cc_ver}} g++-${{matrix.cc_ver}} python3 libpython3-dev swig default-jdk default-jre emscripten
+      run: |
+        sudo apt install libxml2-dev gcc-${{matrix.cc_ver}} g++-${{matrix.cc_ver}} python3 libpython3-dev \
+        swig default-jdk default-jre emscripten doxygen
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build      
@@ -229,7 +231,7 @@ jobs:
       run: |
         cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install \
         -DCMAKE_PREFIX_PATH=${{runner.workspace}}/build/install -DCMAKE_CXX_STANDARD=${{matrix.cpp}} -DCC_X509_BUILD_APPS=ON \
-        -DCC_X509_GEN_SWIG=ON -DCC_X509_GEN_EMSCRIPTEN=ON
+        -DCC_X509_GEN_SWIG=ON -DCC_X509_GEN_EMSCRIPTEN=ON -DCC_X509_BUILD_DOC=ON
       env:
         CC: gcc-${{matrix.cc_ver}}
         CXX: g++-${{matrix.cc_ver}}
