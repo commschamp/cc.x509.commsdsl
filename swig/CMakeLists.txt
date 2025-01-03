@@ -23,22 +23,14 @@ endif ()
 
 set (swig_tmp_dir "${CMAKE_BINARY_DIR}/output_swig.tmp")
 
-add_custom_target(rm_swig_tmp_tgt
+add_custom_target("swig_output_tgt" ALL
     COMMAND ${CMAKE_COMMAND} -E remove_directory ${swig_tmp_dir}
-)
-
-add_custom_command(
-    OUTPUT ${swig_tmp_dir}
-    DEPENDS ${CC_X509_SCHEMA_FILES} ${src_files} rm_swig_tmp_tgt
     COMMAND ${COMMSDSL2SWIG} -s ${warn_as_error} ${COMMSDSL2SWIG_EXTRA_ARGS}
         -c ${CC_X509_SWIG_SRC_DIR} -o ${swig_tmp_dir} ${CC_X509_SCHEMA_FILES}
-)
-
-add_custom_target("swig_output_tgt" ALL
     COMMAND ${CMAKE_COMMAND}
         -DGENERATED="${swig_tmp_dir}" -DOUTPUT="${CC_X509_SWIG_OUTPUT_DIR}"
         -P "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake"        
-    DEPENDS ${swig_tmp_dir} "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake" ${CC_X509_SCHEMA_FILES})
+    DEPENDS "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake" ${CC_X509_SCHEMA_FILES})
 
 if (CC_X509_BUILD_SWIG)
         
