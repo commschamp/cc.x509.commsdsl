@@ -15,23 +15,14 @@ if ("${commsdsl2emscirpten_version}" VERSION_LESS "${CC_X509_MIN_COMMSDSL_VERSIO
 endif ()
 
 set (emscripten_tmp_dir "${CMAKE_BINARY_DIR}/output_emscripten.tmp")
-
-add_custom_target(rm_emscripten_tmp_tgt
+add_custom_target("emscripten_output_tgt" ALL
     COMMAND ${CMAKE_COMMAND} -E remove_directory ${emscripten_tmp_dir}
-)
-
-add_custom_command(
-    OUTPUT ${emscripten_tmp_dir}
-    DEPENDS ${CC_X509_SCHEMA_FILES} ${src_files} rm_emscripten_tmp_tgt
     COMMAND ${COMMSDSL2EMSCRIPTEN} -s ${warn_as_error} ${COMMSDSL2EMSCRIPTEN_EXTRA_ARGS}
         -o ${emscripten_tmp_dir} -c ${CMAKE_CURRENT_SOURCE_DIR}/src ${CC_X509_SCHEMA_FILES}
-)
-
-add_custom_target("emscripten_output_tgt" ALL
     COMMAND ${CMAKE_COMMAND}
         -DGENERATED="${emscripten_tmp_dir}" -DOUTPUT="${CC_X509_EMSCRIPTEN_OUTPUT_DIR}"
         -P "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake"        
-    DEPENDS ${emscripten_tmp_dir} "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake" ${CC_X509_SCHEMA_FILES})
+    DEPENDS "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake" ${CC_X509_SCHEMA_FILES})
 
 if (CC_X509_BUILD_EMSCRIPTEN)
     execute_process(

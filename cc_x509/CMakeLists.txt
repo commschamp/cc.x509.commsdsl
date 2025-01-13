@@ -26,23 +26,14 @@ else ()
     set (code_input_param -c ${CC_X509_ASN1_DSL_SRC})
 endif()
 
-set (rm_tmp_tgt ${name}_rm_tmp_tgt)
-add_custom_target(${rm_tmp_tgt}
-    COMMAND ${CMAKE_COMMAND} -E remove_directory ${tmp_output_dir}
-)
-
-add_custom_command(
-    OUTPUT ${tmp_output_dir}
-    DEPENDS ${CC_X509_SCHEMA_FILES} ${rm_tmp_tgt}
-    COMMAND ${COMMSDSL2COMMS_EXE} -d -s -V ${CC_X509_VERSION} --warn-as-err -o ${tmp_output_dir} ${code_input_param} ${CC_X509_COMMSDSL2COMMS_EXTRA_ARGS} ${CC_X509_SCHEMA_FILES}
-)
-
 set (output_tgt ${name}_output_tgt)
 add_custom_target(${output_tgt} ALL
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${tmp_output_dir}
+    COMMAND ${COMMSDSL2COMMS_EXE} -d -s -V ${CC_X509_VERSION} --warn-as-err -o ${tmp_output_dir} ${code_input_param} ${CC_X509_COMMSDSL2COMMS_EXTRA_ARGS} ${CC_X509_SCHEMA_FILES}
     COMMAND ${CMAKE_COMMAND}
         -DGENERATED="${tmp_output_dir}" -DOUTPUT="${output_dir}" -DCLEANUP_DIRS="doc\;include" 
         -P "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake"
-    DEPENDS ${tmp_output_dir} "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake" ${CC_X509_SCHEMA_FILES})
+    DEPENDS "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake" ${CC_X509_SCHEMA_FILES})
 
 set (build_tgt ${X509_BUILD_TGT})
 set (build_dir ${CMAKE_CURRENT_BINARY_DIR}/build)
