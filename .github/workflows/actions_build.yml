@@ -9,7 +9,7 @@ on:
 
 env:
   COMMS_TAG: v5.3
-  COMMSDSL_TAG: v7.0
+  COMMSDSL_TAG: v7.0.2
   CC_ASN1_COMMSDSL_TAG: v0.4
 
 jobs:
