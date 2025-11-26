@@ -89,7 +89,6 @@ if [ -n "${COMMON_INSTALL_DIR}" ]; then
     CC_ASN1_COMMSDSL_INSTALL_DIR=${COMMON_INSTALL_DIR}
 fi
 
-
 procs=$(nproc)
 if [ -n "${procs}" ]; then
     procs_param="-- -j${procs}"
@@ -177,5 +176,4 @@ export VERBOSE=1
 build_comms
 build_commsdsl
 build_cc_asn1_commsdsl
-
 
