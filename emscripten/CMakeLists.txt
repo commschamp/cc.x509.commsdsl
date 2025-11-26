@@ -17,7 +17,7 @@ endif ()
 set (emscripten_tmp_dir "${CMAKE_BINARY_DIR}/output_emscripten.tmp")
 add_custom_target("emscripten_output_tgt" ALL
     COMMAND ${CMAKE_COMMAND} -E remove_directory ${emscripten_tmp_dir}
-    COMMAND ${COMMSDSL2EMSCRIPTEN} -s ${warn_as_error} ${COMMSDSL2EMSCRIPTEN_EXTRA_ARGS}
+    COMMAND ${COMMSDSL2EMSCRIPTEN} -s -V ${CC_X509_VERSION} ${warn_as_error} ${COMMSDSL2EMSCRIPTEN_EXTRA_ARGS}
         -o ${emscripten_tmp_dir} -c ${CMAKE_CURRENT_SOURCE_DIR}/src ${CC_X509_SCHEMA_FILES}
     COMMAND ${CMAKE_COMMAND}
         -DGENERATED="${emscripten_tmp_dir}" -DOUTPUT="${CC_X509_EMSCRIPTEN_OUTPUT_DIR}"
