@@ -44,6 +44,9 @@ if (CC_X509_BUILD_SWIG)
 
     string (REPLACE ";" "|" combined_languages_str "${CC_X509_SWIG_LANGUAGES}")
 
+    set (combined_prefix_path ${CMAKE_INSTALL_PREFIX} ${CMAKE_PREFIX_PATH})
+    string (REPLACE ";" "|" combined_prefix_path_str "${combined_prefix_path}") 
+
     set (swig_build_dir ${CMAKE_CURRENT_BINARY_DIR}/swig_tgt_build)
     ExternalProject_Add(
         "swig_tgt"
