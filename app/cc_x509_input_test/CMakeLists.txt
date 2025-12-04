@@ -18,7 +18,7 @@ endif()
 set (output_tgt ${name}_output_tgt)
 add_custom_target(${output_tgt} ALL
     COMMAND ${CMAKE_COMMAND} -E remove_directory ${tmp_output_dir}
-    COMMAND ${COMMSDSL2TEST_EXE} -s --warn-as-err -o ${tmp_output_dir} ${code_input_param} ${COMMSDSL2TEST_EXTRA_ARGS} ${CC_X509_SCHEMA_FILES}
+    COMMAND ${COMMSDSL2TEST_EXE} -s --warn-as-err -V ${CC_X509_VERSION} -o ${tmp_output_dir} ${code_input_param} ${COMMSDSL2TEST_EXTRA_ARGS} ${CC_X509_SCHEMA_FILES}
     COMMAND ${CMAKE_COMMAND}
         -DGENERATED="${tmp_output_dir}" -DOUTPUT="${output_dir}"
         -P "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake"
