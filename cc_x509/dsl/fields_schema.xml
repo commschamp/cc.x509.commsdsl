@@ -5,7 +5,7 @@
             <validValue name="v1" val="0" />
             <validValue name="v2" val="1" />
             <validValue name="v3" val="2" />
-        </enum>        
+        </enum>
 
         <optional name="Version" missingOnReadFail="true" missingOnInvalid="true" defaultMode="tentative">
             <bundle name="ActVersion" reuse="asn1.der.ExplicitContext0">
@@ -30,12 +30,12 @@
                     </data>
                 </bundle>
             </replace>
-        </bundle>    
+        </bundle>
 
         <variant name="Time">
             <ref name="utcTime" field="asn1.der.UtcTime" />
-            <ref name="generalTime" field="asn1.der.GeneralizedTime" />        
-        </variant>                
+            <ref name="generalTime" field="asn1.der.GeneralizedTime" />
+        </variant>
 
         <bundle name="Validity" reuse="asn1.der.Sequence">
             <replace>
@@ -44,7 +44,7 @@
                     <ref name="notAfter" field="Time" />
                 </bundle>
             </replace>
-        </bundle>         
+        </bundle>
 
         <bundle name="SubjectPublicKeyInfo" reuse="asn1.der.Sequence">
             <replace>
@@ -53,7 +53,7 @@
                     <ref name="subjectPublicKey" field="asn1.der.RawBitString" />
                 </bundle>
             </replace>
-        </bundle>   
+        </bundle>
 
         <bundle name="Extension" reuse="asn1.der.Sequence">
             <replace>
@@ -72,7 +72,7 @@
                     <data name="value">
                         <description>
                             Parse the raw data of the parameters independently based on the value of the type
-                        </description>                    
+                        </description>
                     </data>
                 </bundle>
             </replace>
@@ -110,14 +110,14 @@
                                 <int name="Tag" reuse="asn1.TagByte" defaultValidValue="asn1.Tag.Context1" />
                             </replace>
                         </bundle>
-                    </optional> 
+                    </optional>
                     <optional name="subjectUniqueID" missingOnReadFail="true">
                         <bundle name="actSubjectUniqueID" reuse="asn1.der.RawBitString">
                             <replace>
                                 <int name="Tag" reuse="asn1.TagByte" defaultValidValue="asn1.Tag.Context2" />
                             </replace>
                         </bundle>
-                    </optional>    
+                    </optional>
                     <optional name="extensions" missingOnReadFail="true">
                         <bundle name="actExtensions" reuse="asn1.der.ExplicitContext3">
                             <replace>
@@ -141,10 +141,10 @@
                     <ref name="signatureValue" field="asn1.der.RawBitString" />
                 </bundle>
             </replace>
-        </bundle> 
+        </bundle>
     </fields>
 
     <message name="Msg" id="MsgId.M0" displayName="^MsgName">
         <ref field="Certificate" />
-    </message>    
+    </message>
 </schema>

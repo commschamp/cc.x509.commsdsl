@@ -25,7 +25,7 @@ set (swig_tmp_dir "${CMAKE_BINARY_DIR}/output_swig.tmp")
 
 add_custom_target("swig_output_tgt" ALL
     COMMAND ${CMAKE_COMMAND} -E remove_directory ${swig_tmp_dir}
-    COMMAND ${COMMSDSL2SWIG} -s ${warn_as_error} ${COMMSDSL2SWIG_EXTRA_ARGS}
+    COMMAND ${COMMSDSL2SWIG} -s -V ${CC_X509_VERSION} ${warn_as_error} ${COMMSDSL2SWIG_EXTRA_ARGS}
         -c ${CC_X509_SWIG_SRC_DIR} -o ${swig_tmp_dir} ${CC_X509_SCHEMA_FILES}
     COMMAND ${CMAKE_COMMAND}
         -DGENERATED="${swig_tmp_dir}" -DOUTPUT="${CC_X509_SWIG_OUTPUT_DIR}"
@@ -43,6 +43,9 @@ if (CC_X509_BUILD_SWIG)
     )
 
     string (REPLACE ";" "|" combined_languages_str "${CC_X509_SWIG_LANGUAGES}")
+
+    set (combined_prefix_path ${CMAKE_INSTALL_PREFIX} ${CMAKE_PREFIX_PATH})
+    string (REPLACE ";" "|" combined_prefix_path_str "${combined_prefix_path}") 
 
     set (swig_build_dir ${CMAKE_CURRENT_BINARY_DIR}/swig_tgt_build)
     ExternalProject_Add(

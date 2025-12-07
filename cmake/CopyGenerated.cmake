@@ -10,7 +10,7 @@ function (copyIfDifferent generated output)
         execute_process(
             COMMAND ${CMAKE_COMMAND}
                 -E copy_if_different ${src} ${dest})
-    endforeach()    
+    endforeach()
 endfunction ()
 
 function (deleteRemoved generated output)
@@ -22,11 +22,11 @@ function (deleteRemoved generated output)
             message (STATUS "Removing: ${output}/${f}")
             execute_process(
                 COMMAND ${CMAKE_COMMAND} -E remove ${output}/${f})
-        endif ()    
-    endforeach()    
+        endif ()
+    endforeach()
 endfunction ()
 
-if (("${GENERATED}" STREQUAL "") OR ("${OUTPUT}" STREQUAL "")) 
+if (("${GENERATED}" STREQUAL "") OR ("${OUTPUT}" STREQUAL ""))
     message (FATAL_ERROR "Bad directory name(s)")
 endif ()
 

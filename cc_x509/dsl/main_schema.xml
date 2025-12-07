@@ -2,11 +2,11 @@
 <schema name="cc_x509" endian="big">
     <fields>
         <string name="MsgName" defaultValue="Message" />
-            
+
         <enum name="MsgId" type="uint8" semanticType="messageId">
             <validValue name="M0" val="0" displayName="^MsgName" />
-        </enum> 
-        
+        </enum>
+
     </fields>
 
     <frame name="Frame">

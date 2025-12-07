@@ -8,90 +8,45 @@ on:
       - '**'
 
 env:
-  COMMS_TAG: v5.4.2
-  COMMSDSL_TAG: v7.1
+  COMMS_TAG: v5.4.5
+  COMMSDSL_TAG: v7.3
   CC_ASN1_COMMSDSL_TAG: v0.4.1
 
 jobs:
-  build_gcc_ubuntu_22_04:
-    runs-on: ubuntu-22.04
-    strategy:
-      fail-fast: false
-      matrix:
-        type: [Debug, Release, MinSizeRel]
-        cc_ver: [9, 10, 11, 12]
-        cpp: [11, 14, 17, 20]
-
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Prepare Install
-      run: sudo apt-get update --fix-missing    
-      
-    - name: Install Packages
-      run: sudo apt install libxml2-dev gcc-${{matrix.cc_ver}} g++-${{matrix.cc_ver}} python3 libpython3-dev swig default-jdk default-jre emscripten
-
-    - name: Create Build Environment
-      run: cmake -E make_directory ${{runner.workspace}}/build      
-
-    - name: Prepare externals
-      shell: bash
-      run: $GITHUB_WORKSPACE/script/prepare_externals.sh
-      env:
-        BUILD_DIR: ${{runner.workspace}}/build
-        CC: gcc-${{matrix.cc_ver}}
-        CXX: g++-${{matrix.cc_ver}}
-        EXTERNALS_DIR: ${{runner.workspace}}/externals
-        COMMON_INSTALL_DIR: ${{runner.workspace}}/build/install
-        COMMON_BUILD_TYPE: ${{matrix.type}}
-        COMMON_CXX_STANDARD: ${{matrix.cpp}}
-        COMMS_TAG: ${{env.COMMS_TAG}}
-        COMMSDSL_TAG: ${{env.COMMSDSL_TAG}}
-        CC_ASN1_COMMSDSL_TAG: ${{env.CC_ASN1_COMMSDSL_TAG}}
-
-    - name: Configure CMake
-      shell: bash
-      working-directory: ${{runner.workspace}}/build
-      run: |
-        cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install \
-        -DCMAKE_PREFIX_PATH=${{runner.workspace}}/build/install -DCMAKE_CXX_STANDARD=${{matrix.cpp}} -DCC_X509_BUILD_APPS=ON \
-        -DCC_X509_GEN_SWIG=ON -DCC_X509_GEN_EMSCRIPTEN=ON
-      env:
-        CC: gcc-${{matrix.cc_ver}}
-        CXX: g++-${{matrix.cc_ver}}
-
-    - name: Build Target 
-      working-directory: ${{runner.workspace}}/build
-      shell: bash
-      run: cmake --build . --config ${{matrix.type}}
-      env:
-        VERBOSE: 1 
-
   build_gcc_ubuntu_24_04:
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
         type: [Debug, Release, MinSizeRel]
-        cc_ver: [13, 14]
+        cc_ver: [9, 10, 11, 12, 13, 14]
         cpp: [11, 14, 17, 20, 23]
         exclude:
+          - cc_ver: 9
+            cpp: 23
+          - cc_ver: 10
+            cpp: 23
+          - cc_ver: 11
+            cpp: 23
+          - cc_ver: 12
+            cpp: 23
           - cc_ver: 13
-            cpp: 23 
+            cpp: 23
 
     steps:
     - uses: actions/checkout@v4
 
     - name: Prepare Install
-      run: sudo apt-get update --fix-missing    
-      
+      run: sudo apt-get update --fix-missing
+
     - name: Install Packages
       run: |
         sudo apt install libxml2-dev gcc-${{matrix.cc_ver}} g++-${{matrix.cc_ver}} python3 libpython3-dev \
-        swig default-jdk default-jre emscripten doxygen
+        swig default-jdk default-jre emscripten doxygen \
+        texlive-base texlive-latex-base texlive-latex-recommended texlive-plain-generic tex4ht
 
     - name: Create Build Environment
-      run: cmake -E make_directory ${{runner.workspace}}/build      
+      run: cmake -E make_directory ${{runner.workspace}}/build
 
     - name: Prepare externals
       shell: bash
@@ -114,17 +69,21 @@ jobs:
       run: |
         cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install \
         -DCMAKE_PREFIX_PATH=${{runner.workspace}}/build/install -DCMAKE_CXX_STANDARD=${{matrix.cpp}} -DCC_X509_BUILD_APPS=ON \
-        -DCC_X509_GEN_SWIG=ON -DCC_X509_GEN_EMSCRIPTEN=ON -DCC_X509_BUILD_DOC=ON
+        -DCC_X509_GEN_SWIG=ON -DCC_X509_GEN_EMSCRIPTEN=ON \
+        -DCC_X509_GEN_C=ON -DCC_X509_GEN_LATEX=ON -DCC_X509_BUILD_LATEX=${{env.BUILD_LATEX}} \
+        -DCC_X509_BUILD_DOC=${{env.BUILD_DOCS}}
       env:
         CC: gcc-${{matrix.cc_ver}}
         CXX: g++-${{matrix.cc_ver}}
+        BUILD_DOCS: "${{ matrix.type == 'Debug' && matrix.cpp == 11 && matrix.cc_ver == 14 && matrix.qt_ver == 5 && 'ON' || 'OFF' }}"
+        BUILD_LATEX: "${{ matrix.type == 'Debug' && matrix.cpp == 17 && matrix.cc_ver == 14 && matrix.qt_ver == 5 && 'ON' || 'OFF' }}"
 
-    - name: Build Target 
+    - name: Build Target
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake --build . --config ${{matrix.type}}
       env:
-        VERBOSE: 1 
+        VERBOSE: 1
 
   build_clang_ubuntu_22_04:
     runs-on: ubuntu-22.04
@@ -132,20 +91,22 @@ jobs:
       fail-fast: false
       matrix:
         type: [Debug, Release, MinSizeRel]
-        cc_ver: [12, 13, 14, 15]
-        cpp: [11, 14, 17, 20]
+        cc_ver: [12, 13]
+        cpp: [11, 14, 17]
 
     steps:
     - uses: actions/checkout@v4
 
     - name: Prepare Install
-      run: sudo apt-get update --fix-missing    
-      
+      run: sudo apt-get update --fix-missing
+
     - name: Install Packages
-      run: sudo apt install libxml2-dev clang-${{matrix.cc_ver}} python3 libpython3-dev swig  default-jdk default-jre emscripten
+      run: |
+        sudo apt install libxml2-dev clang-${{matrix.cc_ver}} \
+        python3 libpython3-dev swig  default-jdk default-jre emscripten
 
     - name: Create Build Environment
-      run: cmake -E make_directory ${{runner.workspace}}/build      
+      run: cmake -E make_directory ${{runner.workspace}}/build
 
     - name: Prepare externals
       shell: bash
@@ -168,17 +129,18 @@ jobs:
       run: |
         cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install \
         -DCMAKE_PREFIX_PATH=${{runner.workspace}}/build/install -DCMAKE_CXX_STANDARD=${{matrix.cpp}} \
-        -DCC_X509_BUILD_APPS=ON -DCC_X509_GEN_SWIG=ON -DCC_X509_GEN_EMSCRIPTEN=ON
+        -DCC_X509_BUILD_APPS=ON -DCC_X509_GEN_SWIG=ON -DCC_X509_GEN_EMSCRIPTEN=ON \
+        -DCC_X509_GEN_C=ON -DCC_X509_GEN_LATEX=ON -DCC_X509_BUILD_LATEX=OFF
       env:
         CC: clang-${{matrix.cc_ver}}
         CXX: clang++-${{matrix.cc_ver}}
 
-    - name: Build Target 
+    - name: Build Target
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake --build . --config ${{matrix.type}}
       env:
-        VERBOSE: 1 
+        VERBOSE: 1
 
   build_clang_ubuntu_24_04:
     runs-on: ubuntu-24.04
@@ -186,25 +148,33 @@ jobs:
       fail-fast: false
       matrix:
         type: [Debug, Release, MinSizeRel]
-        cc_ver: [16, 17, 18]
+        cc_ver: [14, 15, 16, 17, 18]
         cpp: [11, 14, 17, 20, 23]
         exclude:
+          - cc_ver: 14
+            cpp: 20
+          - cc_ver: 14
+            cpp: 23
+          - cc_ver: 15
+            cpp: 20
+          - cc_ver: 15
+            cpp: 23
           - cc_ver: 16
             cpp: 23
           - cc_ver: 17
-            cpp: 23 
+            cpp: 23
 
     steps:
     - uses: actions/checkout@v4
 
     - name: Prepare Install
-      run: sudo apt-get update --fix-missing    
-      
+      run: sudo apt-get update --fix-missing
+
     - name: Install Packages
       run: sudo apt install libxml2-dev clang-${{matrix.cc_ver}} python3 libpython3-dev swig  default-jdk default-jre emscripten
 
     - name: Create Build Environment
-      run: cmake -E make_directory ${{runner.workspace}}/build      
+      run: cmake -E make_directory ${{runner.workspace}}/build
 
     - name: Prepare externals
       shell: bash
@@ -227,32 +197,33 @@ jobs:
       run: |
         cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install \
         -DCMAKE_PREFIX_PATH=${{runner.workspace}}/build/install -DCMAKE_CXX_STANDARD=${{matrix.cpp}} \
-        -DCC_X509_BUILD_APPS=ON -DCC_X509_GEN_SWIG=ON -DCC_X509_GEN_EMSCRIPTEN=ON
+        -DCC_X509_BUILD_APPS=ON -DCC_X509_GEN_SWIG=ON -DCC_X509_GEN_EMSCRIPTEN=ON \
+        -DCC_X509_GEN_C=ON -DCC_X509_GEN_LATEX=ON -DCC_X509_BUILD_LATEX=OFF
       env:
         CC: clang-${{matrix.cc_ver}}
         CXX: clang++-${{matrix.cc_ver}}
 
-    - name: Build Target 
+    - name: Build Target
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake --build . --config ${{matrix.type}}
       env:
-        VERBOSE: 1 
+        VERBOSE: 1
 
-  build_msvc_2019:
-    runs-on: windows-2019
+  build_msvc_2022:
+    runs-on: windows-2022
     strategy:
       fail-fast: false
       matrix:
         type: [Debug, Release]
         arch: [Win32, x64]
-        cpp: [11, 14, 17]
+        cpp: [11, 14, 17, 20]
 
     steps:
     - uses: actions/checkout@v4
 
     - name: Create Build Environment
-      run: cmake -E make_directory ${{runner.workspace}}/build   
+      run: cmake -E make_directory ${{runner.workspace}}/build
 
     - name: Prepare externals
       shell: cmd
@@ -275,29 +246,30 @@ jobs:
       run: |
         cmake %GITHUB_WORKSPACE% -A ${{matrix.arch}} -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install ^
           -DCMAKE_PREFIX_PATH="${{runner.workspace}}/build/install" ^
-          -DCMAKE_CXX_STANDARD=${{matrix.cpp}} -DCC_X509_BUILD_APPS=ON
+          -DCMAKE_CXX_STANDARD=${{matrix.cpp}} -DCC_X509_BUILD_APPS=ON ^
+          -DCC_X509_GEN_C=ON
 
-    - name: Build Target 
+    - name: Build Target
       working-directory: ${{runner.workspace}}/build
       shell: cmd
       run: cmake --build . --config ${{matrix.type}}
       env:
-        VERBOSE: 1 
+        VERBOSE: 1
 
-  build_msvc_2022:
-    runs-on: windows-2022
+  build_msvc_2025:
+    runs-on: windows-2025
     strategy:
       fail-fast: false
       matrix:
         type: [Debug, Release]
         arch: [Win32, x64]
-        cpp: [11, 14, 17, 20]
+        cpp: [11, 14, 17, 20, 23]
 
     steps:
     - uses: actions/checkout@v4
 
     - name: Create Build Environment
-      run: cmake -E make_directory ${{runner.workspace}}/build   
+      run: cmake -E make_directory ${{runner.workspace}}/build
 
     - name: Prepare externals
       shell: cmd
@@ -320,12 +292,13 @@ jobs:
       run: |
         cmake %GITHUB_WORKSPACE% -A ${{matrix.arch}} -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install ^
           -DCMAKE_PREFIX_PATH="${{runner.workspace}}/build/install"  ^
-          -DCMAKE_CXX_STANDARD=${{matrix.cpp}} -DCC_X509_BUILD_APPS=ON
+          -DCMAKE_CXX_STANDARD=${{matrix.cpp}} -DCC_X509_BUILD_APPS=ON ^
+          -DCC_X509_GEN_C=ON
 
-    - name: Build Target 
+    - name: Build Target
       working-directory: ${{runner.workspace}}/build
       shell: cmd
       run: cmake --build . --config ${{matrix.type}}
       env:
-        VERBOSE: 1 
-   
+        VERBOSE: 1
+
