@@ -20,7 +20,7 @@ if (EXISTS "${x509_code_input_dir}/")
 
     execute_process (
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CC_X509_ASN1_DSL_SRC}/ ${x509_code_input_dir}/ ${combined_code_input_dir}/)
-                
+
     set (code_input_param -c ${combined_code_input_dir})
 else ()
     set (code_input_param -c ${CC_X509_ASN1_DSL_SRC})
@@ -31,7 +31,7 @@ add_custom_target(${output_tgt} ALL
     COMMAND ${CMAKE_COMMAND} -E remove_directory ${tmp_output_dir}
     COMMAND ${COMMSDSL2COMMS_EXE} -d -s -V ${CC_X509_VERSION} --warn-as-err -o ${tmp_output_dir} ${code_input_param} ${COMMSDSL2COMMS_EXTRA_ARGS} ${CC_X509_SCHEMA_FILES}
     COMMAND ${CMAKE_COMMAND}
-        -DGENERATED="${tmp_output_dir}" -DOUTPUT="${output_dir}" -DCLEANUP_DIRS="doc\;include" 
+        -DGENERATED="${tmp_output_dir}" -DOUTPUT="${output_dir}" -DCLEANUP_DIRS="doc\;include"
         -P "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake"
     DEPENDS "${PROJECT_SOURCE_DIR}/cmake/CopyGenerated.cmake" ${CC_X509_SCHEMA_FILES})
 
@@ -46,28 +46,28 @@ execute_process (
     COMMAND ${CMAKE_COMMAND} -E make_directory "${build_dir}")
 
 execute_process (
-    COMMAND ${CMAKE_COMMAND} -E make_directory "${output_dir}/include")        
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${output_dir}/include")
 
 execute_process (
-    COMMAND ${CMAKE_COMMAND} -E touch "${output_dir}/include/dummy.txt")    
+    COMMAND ${CMAKE_COMMAND} -E touch "${output_dir}/include/dummy.txt")
 
 include(ExternalProject)
 ExternalProject_Add(
     ${build_tgt}
     BUILD_ALWAYS TRUE
-    DEPENDS ${output_tgt} 
+    DEPENDS ${output_tgt}
     SOURCE_DIR ${output_dir}
     BINARY_DIR ${build_dir}
     INSTALL_DIR ${install_dir}
-    CMAKE_ARGS 
+    CMAKE_ARGS
         -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
         -DCMAKE_GENERATOR=${CMAKE_GENERATOR} -DCMAKE_GENERATOR_PLATFORM=${CMAKE_GENERATOR_PLATFORM}
         -DCMAKE_GENERATOR_TOOLSET=${CMAKE_GENERATOR_TOOLSET} -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
-        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} 
+        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
         -DCMAKE_INSTALL_PREFIX=${install_dir}
         -DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}
         -DOPT_REQUIRE_COMMS_LIB=OFF
-)   
+)
 
 if (CC_X509_BUILD_DOC)
     find_package (Doxygen REQUIRED)
@@ -78,6 +78,6 @@ if (CC_X509_BUILD_DOC)
         COMMAND ${CMAKE_COMMAND} --build ${build_dir} --target doc_${name}
         DEPENDEES "build"
         DEPENDERS "install"
-    )    
+    )
 
-endif ()    
+endif ()

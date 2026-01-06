@@ -8,8 +8,8 @@ on:
       - '**'
 
 env:
-  COMMS_TAG: v5.4.5
-  COMMSDSL_TAG: v7.3
+  COMMS_TAG: v5.5
+  COMMSDSL_TAG: v8.0
   CC_ASN1_COMMSDSL_TAG: v0.4.1
 
 jobs:
