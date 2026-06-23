@@ -8,8 +8,8 @@ on:
       - '**'
 
 env:
-  COMMS_TAG: develop
-  COMMSDSL_TAG: develop
+  COMMS_TAG: v5.5.2
+  COMMSDSL_TAG: v8.1
   CC_ASN1_COMMSDSL_TAG: v0.4.1
 
 jobs:
@@ -256,7 +256,7 @@ jobs:
       env:
         VERBOSE: 1
 
-  build_msvc_2025:
+  build_msvc_2026:
     runs-on: windows-2025
     strategy:
       fail-fast: false
