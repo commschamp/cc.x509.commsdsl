@@ -8,8 +8,8 @@ on:
       - '**'
 
 env:
-  COMMS_TAG: develop
-  COMMSDSL_TAG: develop
+  COMMS_TAG: v5.5.3
+  COMMSDSL_TAG: v8.1.1
   CC_ASN1_COMMSDSL_TAG: v0.4.1
 
 jobs:
